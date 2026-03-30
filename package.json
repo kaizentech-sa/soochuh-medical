@@ -7,17 +7,25 @@
     "build": "next build",
     "start": "next start",
     "lint": "bunx tsc --noEmit && next lint",
-    "format": "bunx biome format --write"
+    "format": "bunx biome format --write",
+    "studio": "sanity dev --host 0.0.0.0 --port 3333",
+    "sanity:deploy": "sanity schema deploy"
   },
   "dependencies": {
+    "@sanity/image-url": "^1.1.0",
+    "@sanity/vision": "^3.91.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.475.0",
     "next": "15.3.7",
+    "next-sanity": "^9.0.10",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-is": "^18.3.1",
     "react-grab": "latest",
     "same-runtime": "^0.0.1",
+    "sanity": "^3.91.0",
+    "styled-components": "^6.3.12",
     "tailwind-merge": "^3.3.0",
     "tailwindcss-animate": "^1.0.7"
   },
