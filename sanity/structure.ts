@@ -8,4 +8,8 @@ export const structure: StructureResolver = (S) =>
         .title("Hero")
         .id("hero")
         .child(S.document().schemaType("hero").documentId("hero")),
+      S.listItem()
+        .title("What We Do")
+        .id("whatWeDo")
+        .child(S.document().schemaType("whatWeDo").documentId("whatWeDo")),
     ]);
