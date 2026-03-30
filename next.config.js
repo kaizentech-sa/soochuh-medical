@@ -8,6 +8,7 @@ const nextConfig = {
       { protocol: "https", hostname: "ugc.same-assets.com", pathname: "/**" },
       { protocol: "https", hostname: "source.unsplash.com", pathname: "/**" },
       { protocol: "https", hostname: "images.unsplash.com", pathname: "/**" },
+      { protocol: "https", hostname: "cdn.sanity.io", pathname: "/**" },
       { protocol: "https", hostname: "www.smithandvanlierop.co.za", pathname: "/**" },
     ],
   },

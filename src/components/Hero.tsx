@@ -1,16 +1,51 @@
 "use client";
 
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function Hero() {
+type HeroSlide = {
+  src: string;
+  alt: string;
+  caption?: string;
+};
+
+type HeroProps = {
+  slides?: HeroSlide[];
+};
+
+const fallbackSlide: HeroSlide = {
+  src: "https://ext.same-assets.com/3349237986/2748719631.jpeg",
+  alt: "Smith & Van Lierop Dentistry",
+};
+
+export default function Hero({ slides = [] }: HeroProps) {
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  const slideshow = useMemo(
+    () => (slides.length > 0 ? slides : [fallbackSlide]),
+    [slides],
+  );
+
+  useEffect(() => {
+    if (slideshow.length <= 1) {
+      return;
+    }
+
+    const timer = window.setInterval(() => {
+      setActiveSlide((current) => (current + 1) % slideshow.length);
+    }, 4500);
+
+    return () => window.clearInterval(timer);
+  }, [slideshow.length]);
+
   return (
     <section className="relative h-[500px] md:h-[600px] lg:h-[700px] overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0">
         <Image
-          src="https://ext.same-assets.com/3349237986/2748719631.jpeg"
-          alt="Smith & Van Lierop Dentistry"
+          src={slideshow[activeSlide].src}
+          alt={slideshow[activeSlide].alt}
           fill
           className="object-cover object-center"
           priority
