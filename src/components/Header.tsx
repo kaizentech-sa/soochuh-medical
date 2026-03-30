@@ -73,7 +73,7 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center">
             <Image
-              src="https://ext.same-assets.com/3349237986/2968540779.webp"
+              src="/Untitled design.svg"
               alt="Smith & Van Lierop Dentistry"
               width={180}
               height={60}
