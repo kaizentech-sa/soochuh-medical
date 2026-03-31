@@ -202,7 +202,7 @@ export default function Team({ members = [] }: TeamProps) {
 
       {selectedMember && (
         <div className="fixed inset-0 z-[120] bg-black/60 flex items-center justify-center p-4">
-          <div className="bg-white max-w-3xl w-full rounded-lg overflow-hidden shadow-2xl">
+          <div className="bg-white max-w-5xl w-full rounded-lg overflow-hidden shadow-2xl">
             <div className="grid grid-cols-1 md:grid-cols-2">
               <div className="relative min-h-[320px]">
                 <Image
@@ -232,21 +232,25 @@ export default function Team({ members = [] }: TeamProps) {
                   </button>
                 </div>
                 <p className="mt-5 text-gray-600 leading-relaxed">{selectedMember.story}</p>
-                <div className="mt-6 flex flex-wrap gap-3">
-                  <a
-                    href={selectedMember.appointmentLink}
-                    className="inline-block bg-[#5a7a7f] text-white px-5 py-2.5 rounded-sm font-medium hover:bg-[#3c4f5a] transition-colors"
-                  >
-                    Book an appointment with {selectedMember.name}
-                  </a>
-                  <a
-                    href={selectedMember.websiteLink}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-block border border-[#5a7a7f] text-[#5a7a7f] px-5 py-2.5 rounded-sm font-medium hover:bg-[#5a7a7f] hover:text-white transition-colors"
-                  >
-                    See doctor&apos;s website
-                  </a>
+                <div className="mt-6 flex flex-col sm:flex-row gap-3">
+                  {selectedMember.appointmentLink?.trim() && (
+                    <a
+                      href={selectedMember.appointmentLink}
+                      className="inline-block bg-[#5a7a7f] text-white px-5 py-2.5 rounded-sm font-medium hover:bg-[#3c4f5a] transition-colors text-center"
+                    >
+                      Book an appointment with {selectedMember.name}
+                    </a>
+                  )}
+                  {selectedMember.websiteLink?.trim() && (
+                    <a
+                      href={selectedMember.websiteLink}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-block border border-[#5a7a7f] text-[#5a7a7f] px-5 py-2.5 rounded-sm font-medium hover:bg-[#5a7a7f] hover:text-white transition-colors text-center"
+                    >
+                      See doctor&apos;s website
+                    </a>
+                  )}
                 </div>
               </div>
             </div>
