@@ -46,6 +46,18 @@ type DifferenceSectionData = {
   };
 } | null;
 
+type PatientStory = {
+  text: string;
+  author: string;
+};
+
+type PatientStoriesData = {
+  sourceMode?: "manual" | "google";
+  manualStories?: PatientStory[];
+  googleApiKey?: string;
+  googlePlaceId?: string;
+} | null;
+
 async function getHeroData() {
   return client.fetch<HeroData>(`*[_type == "hero" && _id == "hero"][0]{
     slideshowImages[]{
@@ -83,11 +95,49 @@ async function getDifferenceSectionData() {
   );
 }
 
+async function getPatientStoriesData() {
+  return client.fetch<PatientStoriesData>(
+    `*[_type == "patientStories" && _id == "patientStories"][0]{
+      sourceMode,
+      googleApiKey,
+      googlePlaceId,
+      "manualStories": manualStories[]{
+        text,
+        author
+      }
+    }`,
+  );
+}
+
+async function getGoogleStories(apiKey: string, placeId: string): Promise<PatientStory[]> {
+  const endpoint = new URL("https://maps.googleapis.com/maps/api/place/details/json");
+  endpoint.searchParams.set("place_id", placeId);
+  endpoint.searchParams.set("fields", "reviews");
+  endpoint.searchParams.set("key", apiKey);
+
+  const response = await fetch(endpoint.toString(), { cache: "no-store" });
+
+  if (!response.ok) {
+    return [];
+  }
+
+  const data = await response.json();
+  const reviews = Array.isArray(data?.result?.reviews) ? data.result.reviews : [];
+
+  return reviews
+    .filter((review: any) => review?.text && review?.author_name)
+    .map((review: any) => ({
+      text: String(review.text),
+      author: String(review.author_name),
+    }));
+}
+
 export default async function Home() {
-  const [heroData, specialisationsData, differenceSectionData] = await Promise.all([
+  const [heroData, specialisationsData, differenceSectionData, patientStoriesData] = await Promise.all([
     getHeroData(),
     getSpecialisationsData(),
     getDifferenceSectionData(),
+    getPatientStoriesData(),
   ]);
 
   const heroSlides =
@@ -103,6 +153,27 @@ export default async function Home() {
       title: card.title,
       subtitle: card.subtitle,
     })) ?? [];
+
+  const manualStories = patientStoriesData?.manualStories ?? [];
+
+  let patientStories = manualStories;
+  if (
+    patientStoriesData?.sourceMode === "google" &&
+    patientStoriesData.googleApiKey &&
+    patientStoriesData.googlePlaceId
+  ) {
+    try {
+      const googleStories = await getGoogleStories(
+        patientStoriesData.googleApiKey,
+        patientStoriesData.googlePlaceId,
+      );
+      if (googleStories.length > 0) {
+        patientStories = googleStories;
+      }
+    } catch {
+      patientStories = manualStories;
+    }
+  }
 
   return (
     <main className="min-h-screen">
@@ -123,7 +194,7 @@ export default async function Home() {
           nextVisitDescription={differenceSectionData?.nextVisit?.description}
           nextVisitButtonLink={differenceSectionData?.nextVisit?.buttonLink}
         />
-        <Testimonials />
+        <Testimonials stories={patientStories} />
         <Gallery />
         <Team />
         <Partners />

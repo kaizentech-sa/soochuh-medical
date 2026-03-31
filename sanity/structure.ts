@@ -32,4 +32,12 @@ export const structure: StructureResolver = (S) =>
             .schemaType("differenceSection")
             .documentId("differenceSection"),
         ),
+      S.listItem()
+        .title("Patient Stories")
+        .id("patientStories")
+        .child(
+          S.document()
+            .schemaType("patientStories")
+            .documentId("patientStories"),
+        ),
     ]);

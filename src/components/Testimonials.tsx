@@ -2,7 +2,16 @@
 
 import { useState, useEffect } from "react";
 
-const testimonials = [
+type PatientStory = {
+  text: string;
+  author: string;
+};
+
+type TestimonialsProps = {
+  stories?: PatientStory[];
+};
+
+const fallbackTestimonials: PatientStory[] = [
   {
     text: "Dr Smith and her team are excellent at putting one at ease. The initial consultation was great, with Dr Smith taking me through the work to be done and setting out treatment options clearly. They are meticulous and the quality of work done is absolutely amazing, with no pain and minimal discomfort while working on my teeth.",
     author: "Inge Gargan",
@@ -25,15 +34,24 @@ const testimonials = [
   },
 ];
 
-export default function Testimonials() {
+export default function Testimonials({ stories = [] }: TestimonialsProps) {
+  const testimonials = stories.length > 0 ? stories : fallbackTestimonials;
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
+    setCurrentIndex(0);
+  }, [testimonials.length]);
+
+  useEffect(() => {
+    if (testimonials.length <= 1) {
+      return undefined;
+    }
+
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % testimonials.length);
     }, 6000);
     return () => clearInterval(interval);
-  }, []);
+  }, [testimonials.length]);
 
   const goToPrevious = () => {
     setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
