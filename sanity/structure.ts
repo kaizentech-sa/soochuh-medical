@@ -24,4 +24,12 @@ export const structure: StructureResolver = (S) =>
             .schemaType("specialisations")
             .documentId("specialisations"),
         ),
+      S.listItem()
+        .title("Difference Section")
+        .id("differenceSection")
+        .child(
+          S.document()
+            .schemaType("differenceSection")
+            .documentId("differenceSection"),
+        ),
     ]);

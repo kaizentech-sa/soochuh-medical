@@ -3,7 +3,19 @@
 import Image from "next/image";
 import Link from "next/link";
 
-export default function Difference() {
+type DifferenceProps = {
+  whatMakesUsDifferentDescription?: string;
+  whatMakesUsDifferentButtonLink?: string;
+  nextVisitDescription?: string;
+  nextVisitButtonLink?: string;
+};
+
+export default function Difference({
+  whatMakesUsDifferentDescription,
+  whatMakesUsDifferentButtonLink,
+  nextVisitDescription,
+  nextVisitButtonLink,
+}: DifferenceProps) {
   return (
     <section id="difference" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4">
@@ -28,12 +40,11 @@ export default function Difference() {
                 What Makes Us Different
               </h2>
               <p className="text-gray-600 mb-6 leading-relaxed">
-                Every filling, veneer or smile make-over is sculpted and crafted
-                to look beautiful, healthy and natural. At Smith and van Lierop
-                we live dentistry, and love people
+                {whatMakesUsDifferentDescription ||
+                  "Every filling, veneer or smile make-over is sculpted and crafted to look beautiful, healthy and natural. At Smith and van Lierop we live dentistry, and love people"}
               </p>
               <Link
-                href="#"
+                href={whatMakesUsDifferentButtonLink || "#"}
                 className="inline-block border border-[#5a7a7f] text-[#5a7a7f] px-6 py-3 rounded-sm font-medium hover:bg-[#5a7a7f] hover:text-white transition-colors"
               >
                 Click To Find Out More
@@ -48,15 +59,14 @@ export default function Difference() {
             <div className="absolute -left-20 top-0 w-96 h-96 bg-[#e8f0f1] rounded-full opacity-30" />
             <div className="relative">
               <h2 className="font-heading text-3xl md:text-4xl text-[#5a7a7f] font-semibold mb-6">
-                What To Expect At Your Dental Visit
+                What To Expect At Your Next Visit
               </h2>
               <p className="text-gray-600 mb-6 leading-relaxed">
-                During your visit, we will review your dental and medical history
-                forms, and take X-rays and digital photographs of your teeth and
-                mouth. At our practice.
+                {nextVisitDescription ||
+                  "During your visit, we will review your history forms and discuss your concerns before planning the most suitable next steps for your care."}
               </p>
               <Link
-                href="#"
+                href={nextVisitButtonLink || "#"}
                 className="inline-block border border-[#5a7a7f] text-[#5a7a7f] px-6 py-3 rounded-sm font-medium hover:bg-[#5a7a7f] hover:text-white transition-colors"
               >
                 Click To Find Out More

@@ -1,3 +1,4 @@
+import { differenceSectionType } from "./differenceSection";
 import { heroType } from "./hero";
 import { specialisationsType } from "./specialisations";
 import { whatWeDoType } from "./whatWeDo";
@@ -8,4 +9,5 @@ export const schemaTypes = [
   whatWeDoType,
   whoWeAreType,
   specialisationsType,
+  differenceSectionType,
 ];

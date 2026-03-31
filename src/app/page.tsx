@@ -35,6 +35,17 @@ type SpecialisationsData = {
   cards?: SpecialisationCard[];
 } | null;
 
+type DifferenceSectionData = {
+  whatMakesUsDifferent?: {
+    description?: string;
+    buttonLink?: string;
+  };
+  nextVisit?: {
+    description?: string;
+    buttonLink?: string;
+  };
+} | null;
+
 async function getHeroData() {
   return client.fetch<HeroData>(`*[_type == "hero" && _id == "hero"][0]{
     slideshowImages[]{
@@ -57,10 +68,26 @@ async function getSpecialisationsData() {
   );
 }
 
+async function getDifferenceSectionData() {
+  return client.fetch<DifferenceSectionData>(
+    `*[_type == "differenceSection" && _id == "differenceSection"][0]{
+      whatMakesUsDifferent{
+        description,
+        buttonLink
+      },
+      nextVisit{
+        description,
+        buttonLink
+      }
+    }`,
+  );
+}
+
 export default async function Home() {
-  const [heroData, specialisationsData] = await Promise.all([
+  const [heroData, specialisationsData, differenceSectionData] = await Promise.all([
     getHeroData(),
     getSpecialisationsData(),
+    getDifferenceSectionData(),
   ]);
 
   const heroSlides =
@@ -86,7 +113,16 @@ export default async function Home() {
         <Services />
         <About />
         <Phases cards={specialisationCards} />
-        <Difference />
+        <Difference
+          whatMakesUsDifferentDescription={
+            differenceSectionData?.whatMakesUsDifferent?.description
+          }
+          whatMakesUsDifferentButtonLink={
+            differenceSectionData?.whatMakesUsDifferent?.buttonLink
+          }
+          nextVisitDescription={differenceSectionData?.nextVisit?.description}
+          nextVisitButtonLink={differenceSectionData?.nextVisit?.buttonLink}
+        />
         <Testimonials />
         <Gallery />
         <Team />
