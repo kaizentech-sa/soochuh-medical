@@ -89,6 +89,18 @@ type CollaboratorsSectionData = {
   logos?: CollaboratorLogoData[];
 } | null;
 
+type ContactPhoneData = {
+  label?: string;
+  number: string;
+};
+
+type ContactSectionData = {
+  phoneNumbers?: ContactPhoneData[];
+  whatsappNumber?: string;
+  address?: string;
+  email?: string;
+} | null;
+
 async function getHeroData() {
   return client.fetch<HeroData>(`*[_type == "hero" && _id == "hero"][0]{
     slideshowImages[]{
@@ -177,6 +189,20 @@ async function getCollaboratorsSectionData() {
   );
 }
 
+async function getContactSectionData() {
+  return client.fetch<ContactSectionData>(
+    `*[_type == "contactSection" && _id == "contactSection"][0]{
+      phoneNumbers[]{
+        label,
+        number
+      },
+      whatsappNumber,
+      address,
+      email
+    }`,
+  );
+}
+
 async function getGoogleStories(apiKey: string, placeId: string): Promise<PatientStory[]> {
   const endpoint = new URL("https://maps.googleapis.com/maps/api/place/details/json");
   endpoint.searchParams.set("place_id", placeId);
@@ -209,6 +235,7 @@ export default async function Home() {
     gallerySectionData,
     teamSectionData,
     collaboratorsSectionData,
+    contactSectionData,
   ] = await Promise.all([
     getHeroData(),
     getSpecialisationsData(),
@@ -217,6 +244,7 @@ export default async function Home() {
     getGallerySectionData(),
     getTeamSectionData(),
     getCollaboratorsSectionData(),
+    getContactSectionData(),
   ]);
 
   const heroSlides =
@@ -299,7 +327,12 @@ export default async function Home() {
         <Gallery images={galleryImages} />
         <Team members={teamMembers} />
         <Partners collaborators={collaboratorLogos} />
-        <Contact />
+        <Contact
+          phoneNumbers={contactSectionData?.phoneNumbers}
+          whatsappNumber={contactSectionData?.whatsappNumber}
+          address={contactSectionData?.address}
+          email={contactSectionData?.email}
+        />
         <Footer />
       </div>
       <ContactBar />

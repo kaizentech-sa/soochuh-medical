@@ -64,4 +64,12 @@ export const structure: StructureResolver = (S) =>
             .schemaType("collaboratorsSection")
             .documentId("collaboratorsSection"),
         ),
+      S.listItem()
+        .title("Contact Section")
+        .id("contactSection")
+        .child(
+          S.document()
+            .schemaType("contactSection")
+            .documentId("contactSection"),
+        ),
     ]);
