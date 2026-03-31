@@ -2,9 +2,19 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import Link from "next/link";
 
-const teamMembers = [
+type TeamMember = {
+  name: string;
+  role: string;
+  image: string;
+};
+
+type TeamProps = {
+  description?: string;
+  members?: TeamMember[];
+};
+
+const fallbackTeamMembers: TeamMember[] = [
   {
     name: "Dr Corné Smith",
     role: "Clinical Director/Owner",
@@ -44,7 +54,8 @@ const teamMembers = [
 
 const VISIBLE_COUNT_DESKTOP = 4;
 
-export default function Team() {
+export default function Team({ description, members = [] }: TeamProps) {
+  const teamMembers = members.length > 0 ? members : fallbackTeamMembers;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visibleCount, setVisibleCount] = useState(VISIBLE_COUNT_DESKTOP);
 
@@ -59,7 +70,7 @@ export default function Team() {
     return () => window.removeEventListener("resize", update);
   }, []);
 
-  const maxIndex = teamMembers.length - visibleCount;
+  const maxIndex = Math.max(0, teamMembers.length - visibleCount);
 
   const goToPrevious = () => setCurrentIndex((prev) => Math.max(0, prev - 1));
   const goToNext = () => setCurrentIndex((prev) => Math.min(maxIndex, prev + 1));
@@ -77,9 +88,8 @@ export default function Team() {
             <span className="bar-secondary" />
           </div>
           <p className="text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            With our passion for dentistry and people, we have brought together a
-            unique team of highly qualified specialists and dentists all under one
-            roof. Working together to achieve the best treatment for each patient.
+            {description ||
+              "With our passion for healthcare and people, we have brought together a unique team of highly qualified specialists under one roof, working together to achieve the best care for each patient."}
           </p>
         </div>
 
@@ -151,16 +161,6 @@ export default function Team() {
               }`}
             />
           ))}
-        </div>
-
-        {/* CTA Button */}
-        <div className="text-center mt-10">
-          <Link
-            href="#"
-            className="inline-block bg-[#5a7a7f] text-white px-10 py-3 rounded-sm font-medium hover:bg-[#3c4f5a] transition-colors tracking-wide"
-          >
-            Meet The Team
-          </Link>
         </div>
       </div>
     </section>

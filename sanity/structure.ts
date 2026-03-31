@@ -48,4 +48,12 @@ export const structure: StructureResolver = (S) =>
             .schemaType("gallerySection")
             .documentId("gallerySection"),
         ),
+      S.listItem()
+        .title("Team Section")
+        .id("teamSection")
+        .child(
+          S.document()
+            .schemaType("teamSection")
+            .documentId("teamSection"),
+        ),
     ]);

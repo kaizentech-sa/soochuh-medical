@@ -67,6 +67,17 @@ type GallerySectionData = {
   images?: GalleryImageData[];
 } | null;
 
+type TeamMemberData = {
+  name: string;
+  role: string;
+  image: any;
+};
+
+type TeamSectionData = {
+  description?: string;
+  members?: TeamMemberData[];
+} | null;
+
 async function getHeroData() {
   return client.fetch<HeroData>(`*[_type == "hero" && _id == "hero"][0]{
     slideshowImages[]{
@@ -129,6 +140,19 @@ async function getGallerySectionData() {
   );
 }
 
+async function getTeamSectionData() {
+  return client.fetch<TeamSectionData>(
+    `*[_type == "teamSection" && _id == "teamSection"][0]{
+      description,
+      members[]{
+        name,
+        role,
+        "image": image.asset
+      }
+    }`,
+  );
+}
+
 async function getGoogleStories(apiKey: string, placeId: string): Promise<PatientStory[]> {
   const endpoint = new URL("https://maps.googleapis.com/maps/api/place/details/json");
   endpoint.searchParams.set("place_id", placeId);
@@ -159,12 +183,14 @@ export default async function Home() {
     differenceSectionData,
     patientStoriesData,
     gallerySectionData,
+    teamSectionData,
   ] = await Promise.all([
     getHeroData(),
     getSpecialisationsData(),
     getDifferenceSectionData(),
     getPatientStoriesData(),
     getGallerySectionData(),
+    getTeamSectionData(),
   ]);
 
   const heroSlides =
@@ -208,6 +234,13 @@ export default async function Home() {
       alt: item.alt || `Gallery image ${index + 1}`,
     })) ?? [];
 
+  const teamMembers =
+    teamSectionData?.members?.map((member) => ({
+      name: member.name,
+      role: member.role,
+      image: urlFor(member.image).width(500).height(500).fit("crop").url(),
+    })) ?? [];
+
   return (
     <main className="min-h-screen">
       <ScrollAnimator />
@@ -229,7 +262,7 @@ export default async function Home() {
         />
         <Testimonials stories={patientStories} />
         <Gallery images={galleryImages} />
-        <Team />
+        <Team description={teamSectionData?.description} members={teamMembers} />
         <Partners />
         <Contact />
         <Footer />
