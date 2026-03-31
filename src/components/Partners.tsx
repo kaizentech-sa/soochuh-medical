@@ -2,7 +2,16 @@
 
 import Image from "next/image";
 
-const partners = [
+type Collaborator = {
+  name: string;
+  logo: string;
+};
+
+type PartnersProps = {
+  collaborators?: Collaborator[];
+};
+
+const fallbackPartners: Collaborator[] = [
   { name: "Slow Dentistry", logo: "https://ext.same-assets.com/3349237986/3011176184.webp" },
   { name: "Style Italiano", logo: "https://ext.same-assets.com/3349237986/76657964.webp" },
   { name: "SAAAD", logo: "https://ext.same-assets.com/3349237986/2469611337.jpeg" },
@@ -11,7 +20,9 @@ const partners = [
   { name: "ITI", logo: "https://www.smithandvanlierop.co.za/images/ITI-2.jpg" },
 ];
 
-export default function Partners() {
+export default function Partners({ collaborators = [] }: PartnersProps) {
+  const partners = collaborators.length > 0 ? collaborators : fallbackPartners;
+
   return (
     <section className="py-16 bg-gray-50">
       <div className="max-w-6xl mx-auto px-4">

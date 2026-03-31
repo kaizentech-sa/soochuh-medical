@@ -1,3 +1,4 @@
+import { collaboratorsSectionType } from "./collaboratorsSection";
 import { differenceSectionType } from "./differenceSection";
 import { gallerySectionType } from "./gallerySection";
 import { heroType } from "./hero";
@@ -12,6 +13,7 @@ export const schemaTypes = [
   whatWeDoType,
   whoWeAreType,
   specialisationsType,
+  collaboratorsSectionType,
   differenceSectionType,
   patientStoriesType,
   gallerySectionType,

@@ -80,6 +80,15 @@ type TeamSectionData = {
   members?: TeamMemberData[];
 } | null;
 
+type CollaboratorLogoData = {
+  name: string;
+  logo: any;
+};
+
+type CollaboratorsSectionData = {
+  logos?: CollaboratorLogoData[];
+} | null;
+
 async function getHeroData() {
   return client.fetch<HeroData>(`*[_type == "hero" && _id == "hero"][0]{
     slideshowImages[]{
@@ -157,6 +166,17 @@ async function getTeamSectionData() {
   );
 }
 
+async function getCollaboratorsSectionData() {
+  return client.fetch<CollaboratorsSectionData>(
+    `*[_type == "collaboratorsSection" && _id == "collaboratorsSection"][0]{
+      logos[]{
+        name,
+        "logo": logo.asset
+      }
+    }`,
+  );
+}
+
 async function getGoogleStories(apiKey: string, placeId: string): Promise<PatientStory[]> {
   const endpoint = new URL("https://maps.googleapis.com/maps/api/place/details/json");
   endpoint.searchParams.set("place_id", placeId);
@@ -188,6 +208,7 @@ export default async function Home() {
     patientStoriesData,
     gallerySectionData,
     teamSectionData,
+    collaboratorsSectionData,
   ] = await Promise.all([
     getHeroData(),
     getSpecialisationsData(),
@@ -195,6 +216,7 @@ export default async function Home() {
     getPatientStoriesData(),
     getGallerySectionData(),
     getTeamSectionData(),
+    getCollaboratorsSectionData(),
   ]);
 
   const heroSlides =
@@ -248,6 +270,12 @@ export default async function Home() {
       image: urlFor(member.image).width(500).height(500).fit("crop").url(),
     })) ?? [];
 
+  const collaboratorLogos =
+    collaboratorsSectionData?.logos?.map((logoItem) => ({
+      name: logoItem.name,
+      logo: urlFor(logoItem.logo).width(400).height(200).fit("crop").url(),
+    })) ?? [];
+
   return (
     <main className="min-h-screen">
       <ScrollAnimator />
@@ -270,7 +298,7 @@ export default async function Home() {
         <Testimonials stories={patientStories} />
         <Gallery images={galleryImages} />
         <Team members={teamMembers} />
-        <Partners />
+        <Partners collaborators={collaboratorLogos} />
         <Contact />
         <Footer />
       </div>
