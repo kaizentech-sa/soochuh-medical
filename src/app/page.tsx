@@ -71,10 +71,12 @@ type TeamMemberData = {
   name: string;
   role: string;
   image: any;
+  story: string;
+  appointmentLink: string;
+  websiteLink: string;
 };
 
 type TeamSectionData = {
-  description?: string;
   members?: TeamMemberData[];
 } | null;
 
@@ -143,10 +145,12 @@ async function getGallerySectionData() {
 async function getTeamSectionData() {
   return client.fetch<TeamSectionData>(
     `*[_type == "teamSection" && _id == "teamSection"][0]{
-      description,
       members[]{
         name,
         role,
+        story,
+        appointmentLink,
+        websiteLink,
         "image": image.asset
       }
     }`,
@@ -238,6 +242,9 @@ export default async function Home() {
     teamSectionData?.members?.map((member) => ({
       name: member.name,
       role: member.role,
+      story: member.story,
+      appointmentLink: member.appointmentLink,
+      websiteLink: member.websiteLink,
       image: urlFor(member.image).width(500).height(500).fit("crop").url(),
     })) ?? [];
 
@@ -262,7 +269,7 @@ export default async function Home() {
         />
         <Testimonials stories={patientStories} />
         <Gallery images={galleryImages} />
-        <Team description={teamSectionData?.description} members={teamMembers} />
+        <Team members={teamMembers} />
         <Partners />
         <Contact />
         <Footer />

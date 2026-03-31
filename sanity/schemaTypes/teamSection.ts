@@ -6,12 +6,6 @@ export const teamSectionType = defineType({
   type: "document",
   fields: [
     defineField({
-      name: "description",
-      title: "Description",
-      type: "text",
-      rows: 4,
-    }),
-    defineField({
       name: "members",
       title: "Team Members",
       type: "array",
@@ -39,6 +33,29 @@ export const teamSectionType = defineType({
               title: "Image",
               type: "image",
               options: { hotspot: true },
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: "story",
+              title: "Doctor Story",
+              type: "text",
+              rows: 8,
+              description: "Profile story shown in the doctor modal.",
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: "appointmentLink",
+              title: "Book Appointment Link",
+              type: "string",
+              description:
+                "Used by the 'Book an appointment with Dr X' button.",
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: "websiteLink",
+              title: "Doctor Website Link",
+              type: "string",
+              description: "Used by the 'See doctor's website' button.",
               validation: (rule) => rule.required(),
             }),
           ],
