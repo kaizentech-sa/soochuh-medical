@@ -20,9 +20,9 @@ export default function Partners() {
             We work with the best, for you.
           </h3>
           <p className="text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            At Smith and van Lierop our doctors are recognised by leading industry
-            organisations, and work with the best clinical partners and labs to
-            provide top-notch dental treatment for you
+            At Soochuh Medical, our clinicians are recognised by leading industry
+            organisations and collaborate with trusted healthcare partners to
+            deliver exceptional, patient-centred care.
           </p>
         </div>
 
