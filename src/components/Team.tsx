@@ -203,8 +203,8 @@ export default function Team({ members = [] }: TeamProps) {
       {selectedMember && (
         <div className="fixed inset-0 z-[120] bg-black/60 flex items-center justify-center p-4">
           <div className="bg-white max-w-5xl w-full rounded-lg overflow-hidden shadow-2xl">
-            <div className="grid grid-cols-1 md:grid-cols-2">
-              <div className="relative min-h-[320px]">
+            <div className="grid grid-cols-1 md:grid-cols-2 md:min-h-[620px]">
+              <div className="relative min-h-[360px] md:min-h-[620px]">
                 <Image
                   src={selectedMember.image}
                   alt={selectedMember.name}
@@ -212,7 +212,7 @@ export default function Team({ members = [] }: TeamProps) {
                   className="object-cover"
                 />
               </div>
-              <div className="p-6 md:p-8">
+              <div className="p-6 md:p-8 flex flex-col">
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <h3 className="font-heading text-2xl text-[#3c4f5a] font-semibold">
@@ -232,7 +232,7 @@ export default function Team({ members = [] }: TeamProps) {
                   </button>
                 </div>
                 <p className="mt-5 text-gray-600 leading-relaxed">{selectedMember.story}</p>
-                <div className="mt-6 flex flex-col sm:flex-row gap-3">
+                <div className="mt-auto pt-6 flex flex-col sm:flex-row gap-3">
                   {selectedMember.appointmentLink?.trim() && (
                     <a
                       href={selectedMember.appointmentLink}
