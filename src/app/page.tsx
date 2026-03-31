@@ -25,6 +25,16 @@ type HeroData = {
   slideshowImages?: HeroSlide[];
 } | null;
 
+type SpecialisationCard = {
+  image: any;
+  title: string;
+  subtitle?: string;
+};
+
+type SpecialisationsData = {
+  cards?: SpecialisationCard[];
+} | null;
+
 async function getHeroData() {
   return client.fetch<HeroData>(`*[_type == "hero" && _id == "hero"][0]{
     slideshowImages[]{
@@ -35,14 +45,36 @@ async function getHeroData() {
   }`);
 }
 
+async function getSpecialisationsData() {
+  return client.fetch<SpecialisationsData>(
+    `*[_type == "specialisations" && _id == "specialisations"][0]{
+      cards[]{
+        title,
+        subtitle,
+        "image": image.asset
+      }
+    }`,
+  );
+}
+
 export default async function Home() {
-  const heroData = await getHeroData();
+  const [heroData, specialisationsData] = await Promise.all([
+    getHeroData(),
+    getSpecialisationsData(),
+  ]);
 
   const heroSlides =
     heroData?.slideshowImages?.map((slide) => ({
       src: urlFor(slide.image).width(2200).height(1400).fit("crop").url(),
       alt: slide.alt || "Hero slideshow image",
       caption: slide.caption,
+    })) ?? [];
+
+  const specialisationCards =
+    specialisationsData?.cards?.map((card) => ({
+      image: urlFor(card.image).width(1000).height(700).fit("crop").url(),
+      title: card.title,
+      subtitle: card.subtitle,
     })) ?? [];
 
   return (
@@ -53,7 +85,7 @@ export default async function Home() {
         <Hero slides={heroSlides} />
         <Services />
         <About />
-        <Phases />
+        <Phases cards={specialisationCards} />
         <Difference />
         <Testimonials />
         <Gallery />

@@ -16,4 +16,12 @@ export const structure: StructureResolver = (S) =>
         .title("Who We Are")
         .id("whoWeAre")
         .child(S.document().schemaType("whoWeAre").documentId("whoWeAre")),
+      S.listItem()
+        .title("Healthcare Fields")
+        .id("specialisations")
+        .child(
+          S.document()
+            .schemaType("specialisations")
+            .documentId("specialisations"),
+        ),
     ]);
