@@ -8,9 +8,10 @@ export const gallerySectionType = defineType({
     defineField({
       name: "images",
       title: "Gallery Images",
-      description: "Upload the images used in the moving collage gallery.",
+      description:
+        "Upload the images used in the moving collage gallery (maximum 12).",
       type: "array",
-      validation: (rule) => rule.required().min(1),
+      validation: (rule) => rule.required().min(1).max(12),
       of: [
         defineField({
           name: "imageItem",
