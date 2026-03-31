@@ -59,10 +59,25 @@ const navItems = [
   { label: "Endodontic Referrals", href: "#" },
 ];
 
-export default function Header() {
+type HeaderProps = {
+  mainPhoneNumber?: string;
+  whatsappNumber?: string;
+};
+
+function toTelHref(number: string) {
+  return `tel:${number.replace(/\s+/g, "")}`;
+}
+
+function toWhatsAppHref(number: string) {
+  return `https://wa.me/${number.replace(/\D+/g, "")}`;
+}
+
+export default function Header({ mainPhoneNumber, whatsappNumber }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const phone = mainPhoneNumber || "+27 21 671 1504";
+  const whatsapp = whatsappNumber || "27611729560";
 
   return (
     <>
@@ -138,7 +153,7 @@ export default function Header() {
               Make An Appointment
             </button>
             <Link
-              href="https://wa.me/27611729560"
+              href={toWhatsAppHref(whatsapp)}
               target="_blank"
               className="bg-[#25D366] text-white p-2 rounded-full hover:bg-[#128C7E] transition-colors"
             >
@@ -147,7 +162,7 @@ export default function Header() {
               </svg>
             </Link>
             <Link
-              href="tel:+27216711504"
+              href={toTelHref(phone)}
               className="bg-[#3c4f5a] text-white px-4 py-2 rounded-full flex items-center gap-2 text-sm font-medium hover:bg-[#5a7a7f] transition-colors"
             >
               <svg
@@ -163,7 +178,7 @@ export default function Header() {
                   d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
                 />
               </svg>
-              +27 21 671 1504
+              {phone}
             </Link>
           </div>
 
@@ -223,7 +238,7 @@ export default function Header() {
             </button>
             <div className="pt-4 border-t flex gap-3">
               <Link
-                href="https://wa.me/27611729560"
+                href={toWhatsAppHref(whatsapp)}
                 target="_blank"
                 className="bg-[#25D366] text-white p-3 rounded-full"
               >
@@ -232,7 +247,7 @@ export default function Header() {
                 </svg>
               </Link>
               <Link
-                href="tel:+27216711504"
+                href={toTelHref(phone)}
                 className="bg-[#3c4f5a] text-white px-4 py-3 rounded-full flex items-center gap-2 text-sm font-medium"
               >
                 <svg

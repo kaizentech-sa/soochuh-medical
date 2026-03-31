@@ -92,6 +92,7 @@ type CollaboratorsSectionData = {
 type ContactPhoneData = {
   label?: string;
   number: string;
+  isMain?: boolean;
 };
 
 type ContactSectionData = {
@@ -194,7 +195,8 @@ async function getContactSectionData() {
     `*[_type == "contactSection" && _id == "contactSection"][0]{
       phoneNumbers[]{
         label,
-        number
+        number,
+        isMain
       },
       whatsappNumber,
       address,
@@ -304,12 +306,21 @@ export default async function Home() {
       logo: urlFor(logoItem.logo).width(400).height(200).fit("crop").url(),
     })) ?? [];
 
+  const contactPhones = contactSectionData?.phoneNumbers ?? [];
+  const selectedMainPhone = contactPhones.find((phone) => phone.isMain)?.number;
+  const mainPhoneNumber = selectedMainPhone || contactPhones[0]?.number;
+  const whatsappNumber = contactSectionData?.whatsappNumber;
+
   return (
     <main className="min-h-screen">
       <ScrollAnimator />
-      <Header />
+      <Header mainPhoneNumber={mainPhoneNumber} whatsappNumber={whatsappNumber} />
       <div className="pt-20">
-        <Hero slides={heroSlides} />
+        <Hero
+          slides={heroSlides}
+          mainPhoneNumber={mainPhoneNumber}
+          whatsappNumber={whatsappNumber}
+        />
         <Services />
         <About />
         <Phases cards={specialisationCards} />
@@ -329,7 +340,7 @@ export default async function Home() {
         <Partners collaborators={collaboratorLogos} />
         <Contact
           phoneNumbers={contactSectionData?.phoneNumbers}
-          whatsappNumber={contactSectionData?.whatsappNumber}
+          whatsappNumber={whatsappNumber}
           address={contactSectionData?.address}
           email={contactSectionData?.email}
         />
