@@ -58,6 +58,15 @@ type PatientStoriesData = {
   googlePlaceId?: string;
 } | null;
 
+type GalleryImageData = {
+  image: any;
+  alt?: string;
+};
+
+type GallerySectionData = {
+  images?: GalleryImageData[];
+} | null;
+
 async function getHeroData() {
   return client.fetch<HeroData>(`*[_type == "hero" && _id == "hero"][0]{
     slideshowImages[]{
@@ -109,6 +118,17 @@ async function getPatientStoriesData() {
   );
 }
 
+async function getGallerySectionData() {
+  return client.fetch<GallerySectionData>(
+    `*[_type == "gallerySection" && _id == "gallerySection"][0]{
+      images[]{
+        alt,
+        "image": asset
+      }
+    }`,
+  );
+}
+
 async function getGoogleStories(apiKey: string, placeId: string): Promise<PatientStory[]> {
   const endpoint = new URL("https://maps.googleapis.com/maps/api/place/details/json");
   endpoint.searchParams.set("place_id", placeId);
@@ -133,11 +153,18 @@ async function getGoogleStories(apiKey: string, placeId: string): Promise<Patien
 }
 
 export default async function Home() {
-  const [heroData, specialisationsData, differenceSectionData, patientStoriesData] = await Promise.all([
+  const [
+    heroData,
+    specialisationsData,
+    differenceSectionData,
+    patientStoriesData,
+    gallerySectionData,
+  ] = await Promise.all([
     getHeroData(),
     getSpecialisationsData(),
     getDifferenceSectionData(),
     getPatientStoriesData(),
+    getGallerySectionData(),
   ]);
 
   const heroSlides =
@@ -175,6 +202,12 @@ export default async function Home() {
     }
   }
 
+  const galleryImages =
+    gallerySectionData?.images?.map((item, index) => ({
+      src: urlFor(item.image).width(1200).height(900).fit("crop").url(),
+      alt: item.alt || `Gallery image ${index + 1}`,
+    })) ?? [];
+
   return (
     <main className="min-h-screen">
       <ScrollAnimator />
@@ -195,7 +228,7 @@ export default async function Home() {
           nextVisitButtonLink={differenceSectionData?.nextVisit?.buttonLink}
         />
         <Testimonials stories={patientStories} />
-        <Gallery />
+        <Gallery images={galleryImages} />
         <Team />
         <Partners />
         <Contact />

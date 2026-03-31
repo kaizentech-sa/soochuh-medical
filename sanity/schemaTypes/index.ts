@@ -1,4 +1,5 @@
 import { differenceSectionType } from "./differenceSection";
+import { gallerySectionType } from "./gallerySection";
 import { heroType } from "./hero";
 import { patientStoriesType } from "./patientStories";
 import { specialisationsType } from "./specialisations";
@@ -12,4 +13,5 @@ export const schemaTypes = [
   specialisationsType,
   differenceSectionType,
   patientStoriesType,
+  gallerySectionType,
 ];

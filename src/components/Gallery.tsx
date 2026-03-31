@@ -7,7 +7,7 @@ type GalleryImage = {
   alt: string;
 };
 
-const galleryImages: GalleryImage[] = [
+const fallbackGalleryImages: GalleryImage[] = [
   {
     src: "https://ext.same-assets.com/3349237986/4189049444.webp",
     alt: "Team photo",
@@ -38,11 +38,28 @@ const galleryImages: GalleryImage[] = [
   },
 ];
 
-export default function Gallery() {
+type GalleryProps = {
+  images?: GalleryImage[];
+};
+
+function repeatToLength<T>(items: T[], targetLength: number): T[] {
+  if (items.length === 0) {
+    return [];
+  }
+  const output: T[] = [];
+  while (output.length < targetLength) {
+    output.push(...items);
+  }
+  return output.slice(0, targetLength);
+}
+
+export default function Gallery({ images = [] }: GalleryProps) {
+  const galleryImages = images.length > 0 ? images : fallbackGalleryImages;
+  const setBase = repeatToLength(galleryImages, 7);
   const collageSets = [
-    galleryImages.slice(0, 7),
-    [galleryImages[2], galleryImages[3], galleryImages[4], galleryImages[5], galleryImages[6], galleryImages[0], galleryImages[1]],
-    [galleryImages[1], galleryImages[3], galleryImages[5], galleryImages[0], galleryImages[6], galleryImages[2], galleryImages[4]],
+    setBase.slice(0, 7),
+    [setBase[2], setBase[3], setBase[4], setBase[5], setBase[6], setBase[0], setBase[1]],
+    [setBase[1], setBase[3], setBase[5], setBase[0], setBase[6], setBase[2], setBase[4]],
   ];
   const sliderSets = [...collageSets, ...collageSets];
 
@@ -54,25 +71,25 @@ export default function Gallery() {
             key={`collage-set-${setIndex}`}
             className="gallery-collage grid grid-cols-6 grid-rows-3 gap-2 md:gap-3 flex-shrink-0 w-[760px] md:w-[980px] h-[360px] md:h-[470px]"
           >
-            <div className="gallery-item relative col-span-3 row-span-2 rounded-xl overflow-hidden">
+            <div className="gallery-item relative col-start-1 col-span-2 row-start-1 row-span-2 rounded-xl overflow-hidden">
               <Image src={set[0].src} alt={set[0].alt} fill className="object-cover" />
             </div>
-            <div className="gallery-item relative col-span-2 row-span-1 rounded-xl overflow-hidden">
+            <div className="gallery-item relative col-start-3 col-span-2 row-start-1 row-span-1 rounded-xl overflow-hidden">
               <Image src={set[1].src} alt={set[1].alt} fill className="object-cover" />
             </div>
-            <div className="gallery-item relative col-span-1 row-span-1 rounded-xl overflow-hidden">
+            <div className="gallery-item relative col-start-3 col-span-1 row-start-2 row-span-1 rounded-xl overflow-hidden">
               <Image src={set[2].src} alt={set[2].alt} fill className="object-cover" />
             </div>
-            <div className="gallery-item relative col-span-1 row-span-1 rounded-xl overflow-hidden">
+            <div className="gallery-item relative col-start-5 col-span-2 row-start-1 row-span-2 rounded-xl overflow-hidden">
               <Image src={set[3].src} alt={set[3].alt} fill className="object-cover" />
             </div>
-            <div className="gallery-item relative col-span-2 row-span-1 rounded-xl overflow-hidden">
+            <div className="gallery-item relative col-start-4 col-span-1 row-start-2 row-span-2 rounded-xl overflow-hidden">
               <Image src={set[4].src} alt={set[4].alt} fill className="object-cover" />
             </div>
-            <div className="gallery-item relative col-span-2 row-span-1 rounded-xl overflow-hidden">
+            <div className="gallery-item relative col-start-1 col-span-3 row-start-3 row-span-1 rounded-xl overflow-hidden">
               <Image src={set[5].src} alt={set[5].alt} fill className="object-cover" />
             </div>
-            <div className="gallery-item relative col-span-4 row-span-1 rounded-xl overflow-hidden">
+            <div className="gallery-item relative col-start-5 col-span-2 row-start-3 row-span-1 rounded-xl overflow-hidden">
               <Image src={set[6].src} alt={set[6].alt} fill className="object-cover" />
             </div>
           </article>
