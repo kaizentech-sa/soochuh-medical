@@ -1,3 +1,4 @@
+import { appointmentSettingsType } from "./appointmentSettings";
 import { collaboratorsSectionType } from "./collaboratorsSection";
 import { contactSectionType } from "./contactSection";
 import { differenceSectionType } from "./differenceSection";
@@ -10,6 +11,7 @@ import { whatWeDoType } from "./whatWeDo";
 import { whoWeAreType } from "./whoWeAre";
 
 export const schemaTypes = [
+  appointmentSettingsType,
   heroType,
   whatWeDoType,
   whoWeAreType,

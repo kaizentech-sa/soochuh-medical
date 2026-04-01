@@ -3,65 +3,11 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import AppointmentModal from "./AppointmentModal";
-
-const navItems = [
-  {
-    label: "About Us",
-    dropdown: [
-      { label: "What makes us different", href: "#difference" },
-      { label: "Meet the team", href: "#team" },
-      { label: "Meet Dr Corne Smith", href: "#" },
-      { label: "Meet Dr Jean van Lierop", href: "#" },
-    ],
-  },
-  {
-    label: "Services",
-    dropdown: [
-      { label: "Advanced & Cosmetic Dentistry", href: "#services" },
-      { label: "Smile Makeovers", href: "#" },
-      { label: "Veneers", href: "#" },
-      { label: "Dental Bonding", href: "#" },
-      { label: "Implants", href: "#" },
-      { label: "General Dentistry", href: "#" },
-      { label: "Oral Hygiene", href: "#" },
-      { label: "Invisalign", href: "#" },
-    ],
-  },
-  {
-    label: "Smile Gallery",
-    dropdown: [
-      { label: "Smile Gallery", href: "#gallery" },
-      { label: "Practice Gallery", href: "#" },
-    ],
-  },
-  { label: "Reviews", href: "#testimonials" },
-  {
-    label: "Patient Corner",
-    dropdown: [
-      { label: "International Patients", href: "#" },
-      { label: "Patient Information Form", href: "#" },
-      { label: "Blog", href: "#" },
-      { label: "Pricing and Payment Options", href: "#" },
-      { label: "First Visit", href: "#" },
-      { label: "FAQs", href: "#" },
-    ],
-  },
-  {
-    label: "Contact Us",
-    dropdown: [
-      { label: "Make an Appointment", href: "#contact" },
-      { label: "Enquiry / Quote", href: "#" },
-      { label: "Endodontic Referrals", href: "#" },
-      { label: "Find Us On Google Maps", href: "#" },
-    ],
-  },
-  { label: "Endodontic Referrals", href: "#" },
-];
 
 type HeaderProps = {
   mainPhoneNumber?: string;
   whatsappNumber?: string;
+  appointmentLink?: string;
 };
 
 function toTelHref(number: string) {
@@ -72,16 +18,73 @@ function toWhatsAppHref(number: string) {
   return `https://wa.me/${number.replace(/\D+/g, "")}`;
 }
 
-export default function Header({ mainPhoneNumber, whatsappNumber }: HeaderProps) {
+export default function Header({
+  mainPhoneNumber,
+  whatsappNumber,
+  appointmentLink,
+}: HeaderProps) {
+  const navItems = [
+    {
+      label: "About Us",
+      dropdown: [
+        { label: "What makes us different", href: "#difference" },
+        { label: "Meet the team", href: "#team" },
+        { label: "Meet Dr Corne Smith", href: "#" },
+        { label: "Meet Dr Jean van Lierop", href: "#" },
+      ],
+    },
+    {
+      label: "Services",
+      dropdown: [
+        { label: "Advanced & Cosmetic Dentistry", href: "#services" },
+        { label: "Smile Makeovers", href: "#" },
+        { label: "Veneers", href: "#" },
+        { label: "Dental Bonding", href: "#" },
+        { label: "Implants", href: "#" },
+        { label: "General Dentistry", href: "#" },
+        { label: "Oral Hygiene", href: "#" },
+        { label: "Invisalign", href: "#" },
+      ],
+    },
+    {
+      label: "Smile Gallery",
+      dropdown: [
+        { label: "Smile Gallery", href: "#gallery" },
+        { label: "Practice Gallery", href: "#" },
+      ],
+    },
+    { label: "Reviews", href: "#testimonials" },
+    {
+      label: "Patient Corner",
+      dropdown: [
+        { label: "International Patients", href: "#" },
+        { label: "Patient Information Form", href: "#" },
+        { label: "Blog", href: "#" },
+        { label: "Pricing and Payment Options", href: "#" },
+        { label: "First Visit", href: "#" },
+        { label: "FAQs", href: "#" },
+      ],
+    },
+    {
+      label: "Contact Us",
+      dropdown: [
+        { label: "Make an Appointment", href: appointmentLink || "#contact" },
+        { label: "Enquiry / Quote", href: "#" },
+        { label: "Endodontic Referrals", href: "#" },
+        { label: "Find Us On Google Maps", href: "#" },
+      ],
+    },
+    { label: "Endodontic Referrals", href: "#" },
+  ];
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const [modalOpen, setModalOpen] = useState(false);
   const phone = mainPhoneNumber || "+27 21 671 1504";
   const whatsapp = whatsappNumber || "27611729560";
+  const globalAppointmentLink = appointmentLink || "#contact";
 
   return (
     <>
-    {modalOpen && <AppointmentModal onClose={() => setModalOpen(false)} />}
     <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between py-3">
@@ -145,13 +148,12 @@ export default function Header({ mainPhoneNumber, whatsappNumber }: HeaderProps)
 
           {/* Contact Buttons */}
           <div className="hidden lg:flex items-center space-x-3">
-            <button
-              type="button"
-              onClick={() => setModalOpen(true)}
+            <Link
+              href={globalAppointmentLink}
               className="text-xs font-medium text-white bg-[#5a7a7f] hover:bg-[#3c4f5a] uppercase tracking-wider px-4 py-2 rounded-sm transition-colors"
             >
               Make An Appointment
-            </button>
+            </Link>
             <Link
               href={toWhatsAppHref(whatsapp)}
               target="_blank"
@@ -229,13 +231,13 @@ export default function Header({ mainPhoneNumber, whatsappNumber }: HeaderProps)
                 </Link>
               </div>
             ))}
-            <button
-              type="button"
-              onClick={() => { setModalOpen(true); setMobileMenuOpen(false); }}
+            <Link
+              href={globalAppointmentLink}
+              onClick={() => setMobileMenuOpen(false)}
               className="w-full bg-[#5a7a7f] text-white py-3 rounded-sm text-sm font-medium hover:bg-[#3c4f5a] transition-colors"
             >
               Make An Appointment
-            </button>
+            </Link>
             <div className="pt-4 border-t flex gap-3">
               <Link
                 href={toWhatsAppHref(whatsapp)}

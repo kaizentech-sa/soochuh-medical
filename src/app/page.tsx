@@ -102,6 +102,10 @@ type ContactSectionData = {
   email?: string;
 } | null;
 
+type AppointmentSettingsData = {
+  appointmentLink?: string;
+} | null;
+
 async function getHeroData() {
   return client.fetch<HeroData>(`*[_type == "hero" && _id == "hero"][0]{
     slideshowImages[]{
@@ -205,6 +209,14 @@ async function getContactSectionData() {
   );
 }
 
+async function getAppointmentSettingsData() {
+  return client.fetch<AppointmentSettingsData>(
+    `*[_type == "appointmentSettings" && _id == "appointmentSettings"][0]{
+      appointmentLink
+    }`,
+  );
+}
+
 async function getGoogleStories(apiKey: string, placeId: string): Promise<PatientStory[]> {
   const endpoint = new URL("https://maps.googleapis.com/maps/api/place/details/json");
   endpoint.searchParams.set("place_id", placeId);
@@ -238,6 +250,7 @@ export default async function Home() {
     teamSectionData,
     collaboratorsSectionData,
     contactSectionData,
+    appointmentSettingsData,
   ] = await Promise.all([
     getHeroData(),
     getSpecialisationsData(),
@@ -247,6 +260,7 @@ export default async function Home() {
     getTeamSectionData(),
     getCollaboratorsSectionData(),
     getContactSectionData(),
+    getAppointmentSettingsData(),
   ]);
 
   const heroSlides =
@@ -310,11 +324,16 @@ export default async function Home() {
   const selectedMainPhone = contactPhones.find((phone) => phone.isMain)?.number;
   const mainPhoneNumber = selectedMainPhone || contactPhones[0]?.number;
   const whatsappNumber = contactSectionData?.whatsappNumber;
+  const appointmentLink = appointmentSettingsData?.appointmentLink;
 
   return (
     <main className="min-h-screen">
       <ScrollAnimator />
-      <Header mainPhoneNumber={mainPhoneNumber} whatsappNumber={whatsappNumber} />
+      <Header
+        mainPhoneNumber={mainPhoneNumber}
+        whatsappNumber={whatsappNumber}
+        appointmentLink={appointmentLink}
+      />
       <div className="pt-20">
         <Hero
           slides={heroSlides}

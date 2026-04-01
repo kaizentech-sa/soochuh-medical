@@ -5,6 +5,14 @@ export const structure: StructureResolver = (S) =>
     .title("Content")
     .items([
       S.listItem()
+        .title("Appointment Settings")
+        .id("appointmentSettings")
+        .child(
+          S.document()
+            .schemaType("appointmentSettings")
+            .documentId("appointmentSettings"),
+        ),
+      S.listItem()
         .title("Hero")
         .id("hero")
         .child(S.document().schemaType("hero").documentId("hero")),
