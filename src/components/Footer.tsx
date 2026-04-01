@@ -58,18 +58,18 @@ export default function Footer() {
           <div className="lg:col-span-1">
             <div className="bg-gray-200 rounded-lg overflow-hidden h-64 relative">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3310.5731753483236!2d18.462658215210894!3d-33.97644198062747!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1dcc42d267f1495d%3A0x4e98015e00a7da3e!2sSmith%20%26%20Van%20Lierop%20Dentistry!5e0!3m2!1sen!2sza!4v1635400000000!5m2!1sen!2sza"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3956.2903460289594!2d18.464385999999998!3d-34.037814!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1dcc434d88f1f3f3%3A0xa279b7a750975c05!2sSoochuh%20Medical!5e1!3m2!1sen!2sza!4v1775037605614!5m2!1sen!2sza"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
                 allowFullScreen
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                title="Smith & Van Lierop Dentistry Location"
+                title="Soochuh Medical Location"
               />
               <div className="absolute bottom-4 left-4 right-4 bg-white rounded-lg p-4 shadow-lg">
                 <h5 className="font-heading font-semibold text-[#5a7a7f] mb-1">
-                  Smith & Van Lierop Dentistry
+                  Soochuh Medical
                 </h5>
                 <p className="text-gray-600 text-xs">
                   Newlands on Main, Piazza Level, Letterstedt House, Main Road, Newlands
