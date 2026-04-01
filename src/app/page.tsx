@@ -300,7 +300,7 @@ export default async function Home() {
       title: card.title,
       subtitle: card.subtitle,
     })) ?? [];
-  const healthcareFieldTitles = specialisationsData?.cards?.map((card) => card.title) ?? [];
+  const healthcareFieldTitles = whatWeDoData?.items?.map((item) => item.title) ?? [];
   const whatWeDoItems =
     whatWeDoData?.items?.map((item) => ({
       icon: urlFor(item.image).width(120).height(120).fit("crop").url(),
