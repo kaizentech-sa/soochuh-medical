@@ -9,6 +9,7 @@ type HeaderProps = {
   whatsappNumber?: string;
   appointmentLink?: string;
   healthcareFields?: string[];
+  googleMapsShareLink?: string;
 };
 
 function toTelHref(number: string) {
@@ -24,6 +25,7 @@ export default function Header({
   whatsappNumber,
   appointmentLink,
   healthcareFields = [],
+  googleMapsShareLink,
 }: HeaderProps) {
   const serviceDropdown =
     healthcareFields.length > 0
@@ -51,13 +53,6 @@ export default function Header({
       label: "Services",
       dropdown: serviceDropdown,
     },
-    {
-      label: "Smile Gallery",
-      dropdown: [
-        { label: "Smile Gallery", href: "#gallery" },
-        { label: "Practice Gallery", href: "#" },
-      ],
-    },
     { label: "Reviews", href: "#testimonials" },
     {
       label: "Patient Corner",
@@ -74,12 +69,9 @@ export default function Header({
       label: "Contact Us",
       dropdown: [
         { label: "Make an Appointment", href: appointmentLink || "#contact" },
-        { label: "Enquiry / Quote", href: "#" },
-        { label: "Endodontic Referrals", href: "#" },
-        { label: "Find Us On Google Maps", href: "#" },
+        { label: "Find Us On Google Maps", href: googleMapsShareLink || "#" },
       ],
     },
-    { label: "Endodontic Referrals", href: "#" },
   ];
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

@@ -64,5 +64,13 @@ export const contactSectionType = defineType({
       type: "string",
       validation: (rule) => rule.required().email(),
     }),
+    defineField({
+      name: "googleMapsShareLink",
+      title: "Google Maps Share Link",
+      type: "string",
+      description:
+        "Paste the Google Maps share URL used by the navbar 'Find Us On Google Maps' link.",
+      validation: (rule) => rule.required(),
+    }),
   ],
 });

@@ -110,6 +110,7 @@ type ContactSectionData = {
   whatsappNumber?: string;
   address?: string;
   email?: string;
+  googleMapsShareLink?: string;
 } | null;
 
 type AppointmentSettingsData = {
@@ -226,7 +227,8 @@ async function getContactSectionData() {
       },
       whatsappNumber,
       address,
-      email
+      email,
+      googleMapsShareLink
     }`,
   );
 }
@@ -366,6 +368,7 @@ export default async function Home() {
         whatsappNumber={whatsappNumber}
         appointmentLink={appointmentLink}
         healthcareFields={healthcareFieldTitles}
+        googleMapsShareLink={contactSectionData?.googleMapsShareLink}
       />
       <div className="pt-20">
         <Hero
