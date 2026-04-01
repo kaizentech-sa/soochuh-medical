@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Dentist Claremont | Newlands Cape Town | Smith and Van Lierop Dentistry",
-  description: "Dentist Claremont/Newlands; Smith and Van Lierop Dentistry. We aim to provide exceptional dental services to patients. Using a unique combination of science and artistry — we can redesign your smile",
+  title: "Soochuh Medical | Newlands, Cape Town",
+  description:
+    "Soochuh Medical in Newlands, Cape Town. Visit us at Newlands on Main, Piazza Level, Letterstedt House, Main Road, Newlands.",
   icons: {
-    icon: "https://ext.same-assets.com/3349237986/1336129460.ico",
+    icon: "/Untitled design.svg",
   },
 };
 
