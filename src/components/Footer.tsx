@@ -21,7 +21,7 @@ export default function Footer() {
           {/* Logo and About */}
           <div>
             <Image
-              src="https://ext.same-assets.com/3349237986/2968540779.webp"
+              src="/Untitled design.svg"
               alt="Smith & Van Lierop Dentistry"
               width={200}
               height={70}
