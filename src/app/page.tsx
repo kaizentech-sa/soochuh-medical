@@ -35,6 +35,16 @@ type SpecialisationsData = {
   cards?: SpecialisationCard[];
 } | null;
 
+type WhatWeDoItemData = {
+  image: any;
+  title: string;
+  caption?: string;
+};
+
+type WhatWeDoData = {
+  items?: WhatWeDoItemData[];
+} | null;
+
 type DifferenceSectionData = {
   whatMakesUsDifferent?: {
     description?: string;
@@ -122,6 +132,18 @@ async function getSpecialisationsData() {
       cards[]{
         title,
         subtitle,
+        "image": image.asset
+      }
+    }`,
+  );
+}
+
+async function getWhatWeDoData() {
+  return client.fetch<WhatWeDoData>(
+    `*[_type == "whatWeDo" && _id == "whatWeDo"][0]{
+      items[]{
+        title,
+        caption,
         "image": image.asset
       }
     }`,
@@ -243,6 +265,7 @@ async function getGoogleStories(apiKey: string, placeId: string): Promise<Patien
 export default async function Home() {
   const [
     heroData,
+    whatWeDoData,
     specialisationsData,
     differenceSectionData,
     patientStoriesData,
@@ -253,6 +276,7 @@ export default async function Home() {
     appointmentSettingsData,
   ] = await Promise.all([
     getHeroData(),
+    getWhatWeDoData(),
     getSpecialisationsData(),
     getDifferenceSectionData(),
     getPatientStoriesData(),
@@ -275,6 +299,14 @@ export default async function Home() {
       image: urlFor(card.image).width(1000).height(700).fit("crop").url(),
       title: card.title,
       subtitle: card.subtitle,
+    })) ?? [];
+  const healthcareFieldTitles = specialisationsData?.cards?.map((card) => card.title) ?? [];
+  const whatWeDoItems =
+    whatWeDoData?.items?.map((item) => ({
+      icon: urlFor(item.image).width(120).height(120).fit("crop").url(),
+      title: item.title,
+      description: item.caption,
+      href: "#",
     })) ?? [];
 
   const manualStories = patientStoriesData?.manualStories ?? [];
@@ -333,6 +365,7 @@ export default async function Home() {
         mainPhoneNumber={mainPhoneNumber}
         whatsappNumber={whatsappNumber}
         appointmentLink={appointmentLink}
+        healthcareFields={healthcareFieldTitles}
       />
       <div className="pt-20">
         <Hero
@@ -340,7 +373,7 @@ export default async function Home() {
           mainPhoneNumber={mainPhoneNumber}
           whatsappNumber={whatsappNumber}
         />
-        <Services />
+        <Services items={whatWeDoItems} />
         <About />
         <Phases cards={specialisationCards} />
         <Difference

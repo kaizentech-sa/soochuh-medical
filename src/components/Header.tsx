@@ -8,6 +8,7 @@ type HeaderProps = {
   mainPhoneNumber?: string;
   whatsappNumber?: string;
   appointmentLink?: string;
+  healthcareFields?: string[];
 };
 
 function toTelHref(number: string) {
@@ -22,29 +23,33 @@ export default function Header({
   mainPhoneNumber,
   whatsappNumber,
   appointmentLink,
+  healthcareFields = [],
 }: HeaderProps) {
+  const serviceDropdown =
+    healthcareFields.length > 0
+      ? healthcareFields.map((field) => ({ label: field, href: "#services" }))
+      : [
+          { label: "Advanced & Cosmetic Dentistry", href: "#services" },
+          { label: "Smile Makeovers", href: "#" },
+          { label: "Veneers", href: "#" },
+          { label: "Dental Bonding", href: "#" },
+          { label: "Implants", href: "#" },
+          { label: "General Dentistry", href: "#" },
+          { label: "Oral Hygiene", href: "#" },
+          { label: "Invisalign", href: "#" },
+        ];
+
   const navItems = [
     {
       label: "About Us",
       dropdown: [
         { label: "What makes us different", href: "#difference" },
         { label: "Meet the team", href: "#team" },
-        { label: "Meet Dr Corne Smith", href: "#" },
-        { label: "Meet Dr Jean van Lierop", href: "#" },
       ],
     },
     {
       label: "Services",
-      dropdown: [
-        { label: "Advanced & Cosmetic Dentistry", href: "#services" },
-        { label: "Smile Makeovers", href: "#" },
-        { label: "Veneers", href: "#" },
-        { label: "Dental Bonding", href: "#" },
-        { label: "Implants", href: "#" },
-        { label: "General Dentistry", href: "#" },
-        { label: "Oral Hygiene", href: "#" },
-        { label: "Invisalign", href: "#" },
-      ],
+      dropdown: serviceDropdown,
     },
     {
       label: "Smile Gallery",

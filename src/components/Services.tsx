@@ -3,7 +3,18 @@
 import Image from "next/image";
 import Link from "next/link";
 
-const services = [
+type ServiceItem = {
+  icon: string;
+  title: string;
+  description?: string;
+  href?: string;
+};
+
+type ServicesProps = {
+  items?: ServiceItem[];
+};
+
+const fallbackServices: ServiceItem[] = [
   {
     icon: "https://ext.same-assets.com/3349237986/2159896115.webp",
     title: "Advanced & Cosmetic Dentistry",
@@ -44,7 +55,9 @@ const services = [
 
 const delayClasses = ["", "delay-100", "delay-200", "delay-300", "delay-100", "delay-200"];
 
-export default function Services() {
+export default function Services({ items = [] }: ServicesProps) {
+  const services = items.length > 0 ? items : fallbackServices;
+
   return (
     <section id="services" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4">
@@ -64,7 +77,7 @@ export default function Services() {
           {services.map((service, index) => (
             <Link
               key={service.title}
-              href={service.href}
+              href={service.href || "#"}
               className={`service-card group text-center p-6 fade-in-up ${delayClasses[index]}`}
             >
               <div className="service-icon w-20 h-20 mx-auto mb-5 rounded-full border-2 border-[#5a7a7f] flex items-center justify-center transition-all duration-300 group-hover:bg-[#5a7a7f]">
