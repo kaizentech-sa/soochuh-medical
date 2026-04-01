@@ -365,7 +365,10 @@ export default async function Home() {
         />
         <Footer />
       </div>
-      <ContactBar />
+      <ContactBar
+        mainPhoneNumber={mainPhoneNumber}
+        whatsappNumber={whatsappNumber}
+      />
     </main>
   );
 }

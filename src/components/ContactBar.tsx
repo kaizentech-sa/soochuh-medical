@@ -3,9 +3,27 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 
-export default function ContactBar() {
+type ContactBarProps = {
+  mainPhoneNumber?: string;
+  whatsappNumber?: string;
+};
+
+function toTelHref(number: string) {
+  return `tel:${number.replace(/\s+/g, "")}`;
+}
+
+function toWhatsAppHref(number: string) {
+  return `https://wa.me/${number.replace(/\D+/g, "")}`;
+}
+
+export default function ContactBar({
+  mainPhoneNumber,
+  whatsappNumber,
+}: ContactBarProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const phone = mainPhoneNumber || "+27 21 671 1504";
+  const whatsapp = whatsappNumber || "27611729560";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -31,14 +49,14 @@ export default function ContactBar() {
               Give us a call to schedule an appointment
             </span>
             <Link
-              href="tel:+27216711504"
+              href={toTelHref(phone)}
               className="text-white hover:text-[#b8d4d8] transition-colors text-sm"
             >
-              Call Us: 021 671 1504
+              Call Us: {phone}
             </Link>
             <span className="text-white/50">|</span>
             <Link
-              href="https://wa.me/27611729560"
+              href={toWhatsAppHref(whatsapp)}
               target="_blank"
               className="flex items-center gap-2 text-white hover:text-[#25D366] transition-colors text-sm"
             >
