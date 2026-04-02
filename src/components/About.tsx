@@ -2,7 +2,17 @@
 
 import Link from "next/link";
 
-export default function About() {
+const DEFAULT_WHO_WE_ARE_DESCRIPTION =
+  "Soochuh Medical is a modern healthcare practice at Newlands on Main in Cape Town. We bring together experienced clinicians and a patient-first approach so you receive thoughtful, coordinated care. Whether you need a routine consultation, ongoing support, or guidance on your next steps, we focus on clear communication, evidence-based practice, and making sure you feel comfortable throughout your visit.";
+
+type AboutProps = {
+  description?: string;
+};
+
+export default function About({ description }: AboutProps) {
+  const body =
+    description?.trim() || DEFAULT_WHO_WE_ARE_DESCRIPTION;
+
   return (
     <section className="py-20 bg-white">
       <div className="max-w-4xl mx-auto px-4 text-center">
@@ -15,14 +25,7 @@ export default function About() {
         </div>
 
         <p className="text-gray-600 text-lg leading-relaxed mb-8 fade-in-up delay-200">
-          Located in the heart of Cape Town, our practice is a sanctuary of dental
-          excellence, offering a unique blend of advanced technology, expert care,
-          and a patient-centered approach. Led by the renowned Dr. Corné Smith
-          and Dr. Jean van Lierop, our team is dedicated to providing personalised
-          treatments that not only enhance your smile but also promote your overall
-          well-being. Whether you&apos;re seeking a stunning smile makeover, expert
-          endodontic care, or general dental services, we invite you to experience
-          dentistry at its best.
+          {body}
         </p>
 
         <div className="fade-in-up delay-300">

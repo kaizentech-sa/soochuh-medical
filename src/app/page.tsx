@@ -45,6 +45,10 @@ type WhatWeDoData = {
   items?: WhatWeDoItemData[];
 } | null;
 
+type WhoWeAreData = {
+  description?: string;
+} | null;
+
 type DifferenceSectionData = {
   whatMakesUsDifferent?: {
     description?: string;
@@ -147,6 +151,14 @@ async function getWhatWeDoData() {
         caption,
         "image": image.asset
       }
+    }`,
+  );
+}
+
+async function getWhoWeAreData() {
+  return client.fetch<WhoWeAreData>(
+    `*[_type == "whoWeAre" && _id == "whoWeAre"][0]{
+      description
     }`,
   );
 }
@@ -269,6 +281,7 @@ export default async function Home() {
     heroData,
     whatWeDoData,
     specialisationsData,
+    whoWeAreData,
     differenceSectionData,
     patientStoriesData,
     gallerySectionData,
@@ -280,6 +293,7 @@ export default async function Home() {
     getHeroData(),
     getWhatWeDoData(),
     getSpecialisationsData(),
+    getWhoWeAreData(),
     getDifferenceSectionData(),
     getPatientStoriesData(),
     getGallerySectionData(),
@@ -377,7 +391,7 @@ export default async function Home() {
           whatsappNumber={whatsappNumber}
         />
         <Services items={whatWeDoItems} />
-        <About />
+        <About description={whoWeAreData?.description} />
         <Phases cards={specialisationCards} />
         <Difference
           whatMakesUsDifferentDescription={

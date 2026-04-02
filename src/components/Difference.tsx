@@ -10,6 +10,12 @@ type DifferenceProps = {
   nextVisitButtonLink?: string;
 };
 
+const DEFAULT_WHAT_MAKES_US_DIFFERENT =
+  "At Soochuh Medical, we combine clinical expertise with a welcoming, calm environment. Our team works collaboratively so you receive consistent, well-informed care across your visits—time to understand your needs and goals, not rushed appointments.";
+
+const DEFAULT_NEXT_VISIT =
+  "At your visit, we review your information, discuss your concerns, and work with you to plan the most appropriate next steps for your health and well-being.";
+
 export default function Difference({
   whatMakesUsDifferentDescription,
   whatMakesUsDifferentButtonLink,
@@ -26,7 +32,7 @@ export default function Difference({
             <div className="relative rounded-full overflow-hidden w-80 h-80 mx-auto lg:mx-0">
               <Image
                 src="https://ext.same-assets.com/3349237986/1072601824.webp"
-                alt="Dr Jean Van Lierop"
+                alt="Soochuh Medical care team"
                 fill
                 className="object-cover"
               />
@@ -40,11 +46,10 @@ export default function Difference({
                 What Makes Us Different
               </h2>
               <p className="text-gray-600 mb-6 leading-relaxed">
-                {whatMakesUsDifferentDescription ||
-                  "Every filling, veneer or smile make-over is sculpted and crafted to look beautiful, healthy and natural. At Smith and van Lierop we live dentistry, and love people"}
+                {whatMakesUsDifferentDescription || DEFAULT_WHAT_MAKES_US_DIFFERENT}
               </p>
               <Link
-                href={whatMakesUsDifferentButtonLink || "#"}
+                href={whatMakesUsDifferentButtonLink || "#team"}
                 className="inline-block border border-[#5a7a7f] text-[#5a7a7f] px-6 py-3 rounded-sm font-medium hover:bg-[#5a7a7f] hover:text-white transition-colors"
               >
                 Click To Find Out More
@@ -62,11 +67,10 @@ export default function Difference({
                 What To Expect At Your Next Visit
               </h2>
               <p className="text-gray-600 mb-6 leading-relaxed">
-                {nextVisitDescription ||
-                  "During your visit, we will review your history forms and discuss your concerns before planning the most suitable next steps for your care."}
+                {nextVisitDescription || DEFAULT_NEXT_VISIT}
               </p>
               <Link
-                href={nextVisitButtonLink || "#"}
+                href={nextVisitButtonLink || "#contact"}
                 className="inline-block border border-[#5a7a7f] text-[#5a7a7f] px-6 py-3 rounded-sm font-medium hover:bg-[#5a7a7f] hover:text-white transition-colors"
               >
                 Click To Find Out More
@@ -79,7 +83,7 @@ export default function Difference({
             <div className="relative rounded-full overflow-hidden w-80 h-80 mx-auto lg:ml-auto lg:mr-0">
               <Image
                 src="https://ext.same-assets.com/3349237986/63651298.webp"
-                alt="Dental visit"
+                alt="Patient consultation at Soochuh Medical"
                 fill
                 className="object-cover"
               />

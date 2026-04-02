@@ -4,13 +4,11 @@ import Image from "next/image";
 import Link from "next/link";
 
 const quickLinks = [
-  { label: "General Dentistry", href: "#" },
-  { label: "Advanced and Cosmetic Dentistry", href: "#" },
-  { label: "Paedodontics / Children Dentistry", href: "#" },
-  { label: "Clear Aligners", href: "#" },
-  { label: "Implants", href: "#" },
-  { label: "Oral Hygiene", href: "#" },
-  { label: "Invisalign", href: "#" },
+  { label: "What makes us different", href: "#difference" },
+  { label: "Meet the team", href: "#team" },
+  { label: "Services", href: "#services" },
+  { label: "Reviews", href: "#testimonials" },
+  { label: "Contact", href: "#contact" },
 ];
 
 export default function Footer() {
@@ -22,16 +20,16 @@ export default function Footer() {
           <div>
             <Image
               src="/Untitled design.svg"
-              alt="Smith & Van Lierop Dentistry"
+              alt="Soochuh Medical"
               width={200}
               height={70}
               className="h-16 w-auto mb-6"
             />
             <p className="text-gray-600 text-sm leading-relaxed">
-              With our passion for dentistry and people, we have brought together
-              a unique team of highly qualified specialists and dentists all
-              under one roof. Working together to achieve the best treatment for
-              each patient.
+              Soochuh Medical brings together dedicated healthcare professionals at
+              Newlands on Main in Cape Town. We are committed to accessible,
+              high-quality care and to supporting your health with clarity and
+              compassion.
             </p>
           </div>
 
@@ -87,7 +85,7 @@ export default function Footer() {
             <p className="text-gray-500 text-sm">
               &copy;2026{" "}
               <span className="text-[#5a7a7f] font-medium">
-                SMITH and Van Lierop
+                Soochuh Medical
               </span>{" "}
               | All Rights Reserved |{" "}
               <Link href="#" className="hover:text-[#5a7a7f]">
@@ -96,18 +94,13 @@ export default function Footer() {
               |{" "}
               <Link href="#" className="hover:text-[#5a7a7f]">
                 Terms and Conditions
-              </Link>{" "}
-              |{" "}
-              <Link href="#" className="hover:text-[#5a7a7f]">
-                Dental Website Design
               </Link>
             </p>
 
-            {/* Social Links */}
             <div className="flex gap-3">
               <Link
-                href="https://x.com/drcornesmith"
-                target="_blank"
+                href="#"
+                aria-label="Soochuh Medical on X"
                 className="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-gray-500 hover:bg-[#5a7a7f] hover:text-white hover:border-[#5a7a7f] transition-colors"
               >
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -115,8 +108,8 @@ export default function Footer() {
                 </svg>
               </Link>
               <Link
-                href="https://www.facebook.com/smithandvanlieropdentistry/"
-                target="_blank"
+                href="#"
+                aria-label="Soochuh Medical on Facebook"
                 className="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-gray-500 hover:bg-[#5a7a7f] hover:text-white hover:border-[#5a7a7f] transition-colors"
               >
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -124,8 +117,8 @@ export default function Footer() {
                 </svg>
               </Link>
               <Link
-                href="https://www.instagram.com/smithandvanlieropdentistry"
-                target="_blank"
+                href="#"
+                aria-label="Soochuh Medical on Instagram"
                 className="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-gray-500 hover:bg-[#5a7a7f] hover:text-white hover:border-[#5a7a7f] transition-colors"
               >
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
