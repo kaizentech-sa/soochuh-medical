@@ -53,6 +53,10 @@ export default function Header({
       label: "Services",
       dropdown: serviceDropdown,
     },
+    {
+      label: "Soochuh Products",
+      dropdown: [{ label: "Scrubs", href: "https://www.soochuh.com/" }],
+    },
     { label: "Reviews", href: "#testimonials" },
     {
       label: "Patient Corner",
@@ -128,15 +132,26 @@ export default function Header({
                 </Link>
                 {item.dropdown && activeDropdown === item.label && (
                   <div className="absolute top-full left-0 bg-white shadow-lg min-w-[220px] py-2 rounded-sm border border-gray-100">
-                    {item.dropdown.map((subItem) => (
-                      <Link
-                        key={subItem.label}
-                        href={subItem.href}
-                        className="block px-4 py-2 text-sm text-gray-600 hover:bg-[#5a7a7f] hover:text-white transition-colors"
-                      >
-                        {subItem.label}
-                      </Link>
-                    ))}
+                    {item.dropdown.map((subItem) => {
+                      const external = subItem.href.startsWith("http");
+                      const className =
+                        "block px-4 py-2 text-sm text-gray-600 hover:bg-[#5a7a7f] hover:text-white transition-colors";
+                      return external ? (
+                        <a
+                          key={subItem.label}
+                          href={subItem.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={className}
+                        >
+                          {subItem.label}
+                        </a>
+                      ) : (
+                        <Link key={subItem.label} href={subItem.href} className={className}>
+                          {subItem.label}
+                        </Link>
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -219,13 +234,46 @@ export default function Header({
           <div className="px-4 py-4 space-y-4">
             {navItems.map((item) => (
               <div key={item.label}>
-                <Link
-                  href={item.href || "#"}
-                  className="block text-gray-700 font-medium py-2"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {item.label}
-                </Link>
+                {item.dropdown ? (
+                  <div className="space-y-2">
+                    <div className="text-gray-700 font-medium py-2">{item.label}</div>
+                    <ul className="pl-3 space-y-2 border-l-2 border-gray-100 ml-1">
+                      {item.dropdown.map((subItem) => {
+                        const external = subItem.href.startsWith("http");
+                        const className =
+                          "block text-sm text-gray-600 py-1 hover:text-[#5a7a7f]";
+                        const close = () => setMobileMenuOpen(false);
+                        return (
+                          <li key={subItem.label}>
+                            {external ? (
+                              <a
+                                href={subItem.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={className}
+                                onClick={close}
+                              >
+                                {subItem.label}
+                              </a>
+                            ) : (
+                              <Link href={subItem.href} className={className} onClick={close}>
+                                {subItem.label}
+                              </Link>
+                            )}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                ) : (
+                  <Link
+                    href={item.href || "#"}
+                    className="block text-gray-700 font-medium py-2"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {item.label}
+                  </Link>
+                )}
               </div>
             ))}
             <Link

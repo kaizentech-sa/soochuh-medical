@@ -43,8 +43,8 @@ export default function ContactBar({
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-[#3c4f5a] text-white py-3 z-50 shadow-lg">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             <span className="text-sm font-medium uppercase tracking-wider hidden md:block">
               Give us a call to schedule an appointment
             </span>
@@ -65,9 +65,18 @@ export default function ContactBar({
               </svg>
               Whatsapp
             </Link>
+            <span className="text-white/50">|</span>
+            <Link
+              href="https://www.soochuh.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white hover:text-[#b8d4d8] transition-colors text-sm"
+            >
+              Soochuh scrubs
+            </Link>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-3 sm:gap-4">
             <Link
               href="#contact"
               className="bg-[#5a7a7f] hover:bg-[#6b9299] text-white px-6 py-2 rounded-sm text-sm font-medium transition-colors"
