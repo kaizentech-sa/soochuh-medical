@@ -24,6 +24,21 @@ export const differenceSectionType = defineType({
           description: "Example: #team",
           validation: (rule) => rule.required(),
         }),
+        defineField({
+          name: "image",
+          title: "Image",
+          description: "Circular image shown beside this block (optional — a default is used if empty).",
+          type: "image",
+          options: { hotspot: true },
+          fields: [
+            defineField({
+              name: "alt",
+              title: "Alt text",
+              type: "string",
+              description: "Short description for screen readers and SEO.",
+            }),
+          ],
+        }),
       ],
     }),
     defineField({
@@ -44,6 +59,21 @@ export const differenceSectionType = defineType({
           type: "string",
           description: "Example: #contact",
           validation: (rule) => rule.required(),
+        }),
+        defineField({
+          name: "image",
+          title: "Image",
+          description: "Circular image shown beside this block (optional — a default is used if empty).",
+          type: "image",
+          options: { hotspot: true },
+          fields: [
+            defineField({
+              name: "alt",
+              title: "Alt text",
+              type: "string",
+              description: "Short description for screen readers and SEO.",
+            }),
+          ],
         }),
       ],
     }),

@@ -53,10 +53,14 @@ type DifferenceSectionData = {
   whatMakesUsDifferent?: {
     description?: string;
     buttonLink?: string;
+    image?: any;
+    imageAlt?: string;
   };
   nextVisit?: {
     description?: string;
     buttonLink?: string;
+    image?: any;
+    imageAlt?: string;
   };
 } | null;
 
@@ -168,11 +172,15 @@ async function getDifferenceSectionData() {
     `*[_type == "differenceSection" && _id == "differenceSection"][0]{
       whatMakesUsDifferent{
         description,
-        buttonLink
+        buttonLink,
+        "image": image.asset,
+        "imageAlt": image.alt
       },
       nextVisit{
         description,
-        buttonLink
+        buttonLink,
+        "image": image.asset,
+        "imageAlt": image.alt
       }
     }`,
   );
@@ -374,6 +382,15 @@ export default async function Home() {
   const whatsappNumber = contactSectionData?.whatsappNumber;
   const appointmentLink = appointmentSettingsData?.appointmentLink;
 
+  const wmusd = differenceSectionData?.whatMakesUsDifferent;
+  const nextVisit = differenceSectionData?.nextVisit;
+  const differenceWhatImageSrc = wmusd?.image
+    ? urlFor(wmusd.image).width(800).height(800).fit("crop").url()
+    : undefined;
+  const differenceNextImageSrc = nextVisit?.image
+    ? urlFor(nextVisit.image).width(800).height(800).fit("crop").url()
+    : undefined;
+
   return (
     <main className="min-h-screen">
       <ScrollAnimator />
@@ -400,8 +417,12 @@ export default async function Home() {
           whatMakesUsDifferentButtonLink={
             differenceSectionData?.whatMakesUsDifferent?.buttonLink
           }
+          whatMakesUsDifferentImageSrc={differenceWhatImageSrc}
+          whatMakesUsDifferentImageAlt={wmusd?.imageAlt}
           nextVisitDescription={differenceSectionData?.nextVisit?.description}
           nextVisitButtonLink={differenceSectionData?.nextVisit?.buttonLink}
+          nextVisitImageSrc={differenceNextImageSrc}
+          nextVisitImageAlt={nextVisit?.imageAlt}
         />
         <Testimonials stories={patientStories} />
         <Gallery images={galleryImages} />

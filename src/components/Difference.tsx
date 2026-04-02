@@ -6,8 +6,12 @@ import Link from "next/link";
 type DifferenceProps = {
   whatMakesUsDifferentDescription?: string;
   whatMakesUsDifferentButtonLink?: string;
+  whatMakesUsDifferentImageSrc?: string;
+  whatMakesUsDifferentImageAlt?: string;
   nextVisitDescription?: string;
   nextVisitButtonLink?: string;
+  nextVisitImageSrc?: string;
+  nextVisitImageAlt?: string;
 };
 
 const DEFAULT_WHAT_MAKES_US_DIFFERENT =
@@ -16,12 +20,27 @@ const DEFAULT_WHAT_MAKES_US_DIFFERENT =
 const DEFAULT_NEXT_VISIT =
   "At your visit, we review your information, discuss your concerns, and work with you to plan the most appropriate next steps for your health and well-being.";
 
+const FALLBACK_WHAT_MAKES_US_IMAGE =
+  "https://ext.same-assets.com/3349237986/1072601824.webp";
+const FALLBACK_NEXT_VISIT_IMAGE =
+  "https://ext.same-assets.com/3349237986/63651298.webp";
+
 export default function Difference({
   whatMakesUsDifferentDescription,
   whatMakesUsDifferentButtonLink,
+  whatMakesUsDifferentImageSrc,
+  whatMakesUsDifferentImageAlt,
   nextVisitDescription,
   nextVisitButtonLink,
+  nextVisitImageSrc,
+  nextVisitImageAlt,
 }: DifferenceProps) {
+  const whatImageSrc = whatMakesUsDifferentImageSrc || FALLBACK_WHAT_MAKES_US_IMAGE;
+  const whatImageAlt =
+    whatMakesUsDifferentImageAlt?.trim() || "Soochuh Medical care team";
+  const nextImageSrc = nextVisitImageSrc || FALLBACK_NEXT_VISIT_IMAGE;
+  const nextImageAlt =
+    nextVisitImageAlt?.trim() || "Patient consultation at Soochuh Medical";
   return (
     <section id="difference" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4">
@@ -31,8 +50,8 @@ export default function Difference({
             <div className="absolute -left-8 -top-8 w-64 h-64 bg-[#e8f0f1] rounded-full opacity-50" />
             <div className="relative rounded-full overflow-hidden w-80 h-80 mx-auto lg:mx-0">
               <Image
-                src="https://ext.same-assets.com/3349237986/1072601824.webp"
-                alt="Soochuh Medical care team"
+                src={whatImageSrc}
+                alt={whatImageAlt}
                 fill
                 className="object-cover"
               />
@@ -82,8 +101,8 @@ export default function Difference({
             <div className="absolute -right-8 -top-8 w-64 h-64 bg-[#e8f0f1] rounded-full opacity-50" />
             <div className="relative rounded-full overflow-hidden w-80 h-80 mx-auto lg:ml-auto lg:mr-0">
               <Image
-                src="https://ext.same-assets.com/3349237986/63651298.webp"
-                alt="Patient consultation at Soochuh Medical"
+                src={nextImageSrc}
+                alt={nextImageAlt}
                 fill
                 className="object-cover"
               />
