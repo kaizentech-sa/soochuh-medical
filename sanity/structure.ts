@@ -84,4 +84,12 @@ export const structure: StructureResolver = (S) =>
         .title("Home Layout")
         .id("homeLayout")
         .child(S.document().schemaType("homeLayout").documentId("homeLayout")),
+      S.listItem()
+        .title("Pricing & Payment Page")
+        .id("pricingPaymentPage")
+        .child(
+          S.document()
+            .schemaType("pricingPaymentPage")
+            .documentId("pricingPaymentPage"),
+        ),
     ]);

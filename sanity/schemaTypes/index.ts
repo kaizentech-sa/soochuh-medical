@@ -5,6 +5,7 @@ import { differenceSectionType } from "./differenceSection";
 import { gallerySectionType } from "./gallerySection";
 import { heroType } from "./hero";
 import { patientStoriesType } from "./patientStories";
+import { pricingPaymentPageType } from "./pricingPaymentPage";
 import { specialisationsType } from "./specialisations";
 import { teamSectionType } from "./teamSection";
 import { whatWeDoType } from "./whatWeDo";
@@ -24,4 +25,5 @@ export const schemaTypes = [
   gallerySectionType,
   teamSectionType,
   homeLayoutType,
+  pricingPaymentPageType,
 ];

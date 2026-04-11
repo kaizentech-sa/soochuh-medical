@@ -62,7 +62,7 @@ export default function Header({
       label: "Patient Corner",
       dropdown: [
         { label: "First Visit", href: "#" },
-        { label: "Pricing and Payment Options", href: "#" },
+        { label: "Pricing and Payment Options", href: "/pricing-and-payment-options" },
         { label: "FAQs", href: "#" },
       ],
     },
