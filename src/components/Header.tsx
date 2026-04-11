@@ -61,11 +61,8 @@ export default function Header({
     {
       label: "Patient Corner",
       dropdown: [
-        { label: "International Patients", href: "#" },
-        { label: "Patient Information Form", href: "#" },
-        { label: "Blog", href: "#" },
-        { label: "Pricing and Payment Options", href: "#" },
         { label: "First Visit", href: "#" },
+        { label: "Pricing and Payment Options", href: "#" },
         { label: "FAQs", href: "#" },
       ],
     },
