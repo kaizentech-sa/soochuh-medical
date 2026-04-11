@@ -9,6 +9,7 @@ import { specialisationsType } from "./specialisations";
 import { teamSectionType } from "./teamSection";
 import { whatWeDoType } from "./whatWeDo";
 import { whoWeAreType } from "./whoWeAre";
+import { homeLayoutType } from "./homeLayout";
 
 export const schemaTypes = [
   appointmentSettingsType,
@@ -22,4 +23,5 @@ export const schemaTypes = [
   patientStoriesType,
   gallerySectionType,
   teamSectionType,
+  homeLayoutType,
 ];

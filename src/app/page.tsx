@@ -1,3 +1,4 @@
+import { Fragment, type ReactNode } from "react";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Services from "@/components/Services";
@@ -14,6 +15,10 @@ import ContactBar from "@/components/ContactBar";
 import ScrollAnimator from "@/components/ScrollAnimator";
 import { client } from "../../sanity/lib/client";
 import { urlFor } from "../../sanity/lib/image";
+import {
+  resolveHomeSectionOrder,
+  type HomePageSectionId,
+} from "../../sanity/homePageSections";
 
 type HeroSlide = {
   image: any;
@@ -261,6 +266,18 @@ async function getAppointmentSettingsData() {
   );
 }
 
+type HomeLayoutData = {
+  sections?: { section?: string }[];
+} | null;
+
+async function getHomeLayoutData() {
+  return client.fetch<HomeLayoutData>(
+    `*[_type == "homeLayout" && _id == "homeLayout"][0]{
+      sections[]{ section }
+    }`,
+  );
+}
+
 async function getGoogleStories(apiKey: string, placeId: string): Promise<PatientStory[]> {
   const endpoint = new URL("https://maps.googleapis.com/maps/api/place/details/json");
   endpoint.searchParams.set("place_id", placeId);
@@ -297,6 +314,7 @@ export default async function Home() {
     collaboratorsSectionData,
     contactSectionData,
     appointmentSettingsData,
+    homeLayoutData,
   ] = await Promise.all([
     getHeroData(),
     getWhatWeDoData(),
@@ -309,7 +327,10 @@ export default async function Home() {
     getCollaboratorsSectionData(),
     getContactSectionData(),
     getAppointmentSettingsData(),
+    getHomeLayoutData(),
   ]);
+
+  const homeSectionOrder = resolveHomeSectionOrder(homeLayoutData?.sections);
 
   const heroSlides =
     heroData?.slideshowImages?.map((slide) => ({
@@ -391,6 +412,47 @@ export default async function Home() {
     ? urlFor(nextVisit.image).width(800).height(800).fit("crop").url()
     : undefined;
 
+  const sectionBlocks: Record<HomePageSectionId, ReactNode> = {
+    hero: (
+      <Hero
+        slides={heroSlides}
+        mainPhoneNumber={mainPhoneNumber}
+        whatsappNumber={whatsappNumber}
+      />
+    ),
+    whatWeDo: <Services items={whatWeDoItems} />,
+    whoWeAre: <About description={whoWeAreData?.description} />,
+    specialisations: <Phases cards={specialisationCards} />,
+    differenceSection: (
+      <Difference
+        whatMakesUsDifferentDescription={
+          differenceSectionData?.whatMakesUsDifferent?.description
+        }
+        whatMakesUsDifferentButtonLink={
+          differenceSectionData?.whatMakesUsDifferent?.buttonLink
+        }
+        whatMakesUsDifferentImageSrc={differenceWhatImageSrc}
+        whatMakesUsDifferentImageAlt={wmusd?.imageAlt}
+        nextVisitDescription={differenceSectionData?.nextVisit?.description}
+        nextVisitButtonLink={differenceSectionData?.nextVisit?.buttonLink}
+        nextVisitImageSrc={differenceNextImageSrc}
+        nextVisitImageAlt={nextVisit?.imageAlt}
+      />
+    ),
+    patientStories: <Testimonials stories={patientStories} />,
+    gallerySection: <Gallery images={galleryImages} />,
+    teamSection: <Team members={teamMembers} />,
+    collaboratorsSection: <Partners collaborators={collaboratorLogos} />,
+    contactSection: (
+      <Contact
+        phoneNumbers={contactSectionData?.phoneNumbers}
+        whatsappNumber={whatsappNumber}
+        address={contactSectionData?.address}
+        email={contactSectionData?.email}
+      />
+    ),
+  };
+
   return (
     <main className="min-h-screen">
       <ScrollAnimator />
@@ -402,38 +464,9 @@ export default async function Home() {
         googleMapsShareLink={contactSectionData?.googleMapsShareLink}
       />
       <div className="pt-20">
-        <Hero
-          slides={heroSlides}
-          mainPhoneNumber={mainPhoneNumber}
-          whatsappNumber={whatsappNumber}
-        />
-        <Services items={whatWeDoItems} />
-        <About description={whoWeAreData?.description} />
-        <Phases cards={specialisationCards} />
-        <Difference
-          whatMakesUsDifferentDescription={
-            differenceSectionData?.whatMakesUsDifferent?.description
-          }
-          whatMakesUsDifferentButtonLink={
-            differenceSectionData?.whatMakesUsDifferent?.buttonLink
-          }
-          whatMakesUsDifferentImageSrc={differenceWhatImageSrc}
-          whatMakesUsDifferentImageAlt={wmusd?.imageAlt}
-          nextVisitDescription={differenceSectionData?.nextVisit?.description}
-          nextVisitButtonLink={differenceSectionData?.nextVisit?.buttonLink}
-          nextVisitImageSrc={differenceNextImageSrc}
-          nextVisitImageAlt={nextVisit?.imageAlt}
-        />
-        <Testimonials stories={patientStories} />
-        <Gallery images={galleryImages} />
-        <Team members={teamMembers} />
-        <Partners collaborators={collaboratorLogos} />
-        <Contact
-          phoneNumbers={contactSectionData?.phoneNumbers}
-          whatsappNumber={whatsappNumber}
-          address={contactSectionData?.address}
-          email={contactSectionData?.email}
-        />
+        {homeSectionOrder.map((sectionId) => (
+          <Fragment key={sectionId}>{sectionBlocks[sectionId]}</Fragment>
+        ))}
         <Footer />
       </div>
       <ContactBar

@@ -80,4 +80,8 @@ export const structure: StructureResolver = (S) =>
             .schemaType("contactSection")
             .documentId("contactSection"),
         ),
+      S.listItem()
+        .title("Home Layout")
+        .id("homeLayout")
+        .child(S.document().schemaType("homeLayout").documentId("homeLayout")),
     ]);
