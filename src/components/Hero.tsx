@@ -71,8 +71,14 @@ export default function Hero({
             />
           </div>
         ))}
-        <div className="absolute inset-0 bg-gradient-to-r from-teal-950/92 via-teal-950/70 to-teal-950/30" />
-        <div className="absolute inset-0 bg-gradient-to-t from-teal-950/75 via-teal-950/10 to-teal-950/55" />
+        {/*
+          Three stacked scrims. The flat base is what makes the hero robust to
+          whatever image the CMS serves — bright illustrations included — while
+          the directional gradients keep depth on the right-hand side.
+        */}
+        <div className="absolute inset-0 bg-teal-950/45" />
+        <div className="absolute inset-0 bg-gradient-to-r from-teal-950/95 via-teal-950/75 to-teal-950/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-teal-950/85 via-teal-950/15 to-teal-950/60" />
       </div>
 
       <div className="shell relative flex min-h-[100svh] flex-col justify-end pb-14 pt-40 md:justify-center md:pb-24 md:pt-44">
@@ -83,10 +89,10 @@ export default function Hero({
 
           <h1 className="animate-rise display-xl mt-6 font-display text-white opacity-0 [animation-delay:320ms]">
             Care that takes
-            <span className="block italic text-teal-200">its time</span>
+            <span className="block italic text-teal-100">its time</span>
           </h1>
 
-          <p className="animate-rise lede mt-7 max-w-xl text-white/80 opacity-0 [animation-delay:460ms]">
+          <p className="animate-rise lede mt-7 max-w-xl !text-white/95 opacity-0 [animation-delay:460ms]">
             Soochuh Medical is a women-led practice on Main Road, where a doctor and
             a dentist work under one roof. Unhurried appointments, plain language,
             and treatment planned around your life — not the other way round.
@@ -103,7 +109,7 @@ export default function Hero({
             >
               <WhatsAppIcon className="h-4 w-4" /> WhatsApp us
             </Link>
-            <Link href={telHref(phone)} className="btn ml-1 gap-2 text-white/75 hover:text-white">
+            <Link href={telHref(phone)} className="btn ml-1 gap-2 px-2 py-3 text-white/75 hover:text-white">
               <PhoneIcon className="h-4 w-4" /> {phone}
             </Link>
           </div>
@@ -112,7 +118,7 @@ export default function Hero({
             {trustMarks.map((mark) => (
               <li
                 key={mark}
-                className="font-sans text-[11px] uppercase tracking-eyebrow text-white/65"
+                className="font-sans text-[11px] uppercase tracking-eyebrow text-white/75"
               >
                 {mark}
               </li>

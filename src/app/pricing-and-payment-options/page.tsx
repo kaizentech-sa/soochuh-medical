@@ -9,7 +9,8 @@ import { client } from "../../../sanity/lib/client";
 import { urlFor } from "../../../sanity/lib/image";
 
 export const metadata: Metadata = {
-  title: "Pricing & payment options | Soochuh Medical",
+  // The root layout appends "| Soochuh Medical" via the title template.
+  title: "Pricing & payment options",
   description:
     "Pricing information and payment methods at Soochuh Medical, 208A Main Road, Diep River, Cape Town.",
 };

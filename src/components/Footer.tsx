@@ -52,7 +52,7 @@ export default function Footer({ googleMapsShareLink }: FooterProps) {
               <li key={link.label}>
                 <Link
                   href={link.href}
-                  className="link-underline font-sans text-[15px] font-light text-ink-soft hover:text-teal-500"
+                  className="link-underline tap font-sans text-[15px] font-light text-ink-soft hover:text-teal-500"
                 >
                   {link.label}
                 </Link>
@@ -111,7 +111,7 @@ export default function Footer({ googleMapsShareLink }: FooterProps) {
       </div>
 
       <div className="border-t border-[color:var(--line)]">
-        <div className="shell flex flex-col items-center justify-between gap-4 py-6 md:flex-row">
+        <div className="shell flex flex-col items-center justify-between gap-4 py-6 pb-24 md:flex-row md:pb-6">
           <p className="font-sans text-[13px] font-light text-ink-muted">
             © {year} Soochuh Medical. All rights reserved.
           </p>

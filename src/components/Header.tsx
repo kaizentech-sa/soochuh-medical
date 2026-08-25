@@ -246,13 +246,13 @@ export default function Header({
                 {item.dropdown ? (
                   <>
                     <p className="eyebrow mb-3">{item.label}</p>
-                    <ul className="space-y-3 border-l border-[color:var(--line)] pl-4">
+                    <ul className="space-y-1 border-l border-[color:var(--line)] pl-4">
                       {item.dropdown.map((sub) => (
                         <li key={sub.label}>
                           <Link
                             href={sub.href}
                             onClick={() => setMobileMenuOpen(false)}
-                            className="font-display text-lg text-ink"
+                            className="block py-2.5 font-display text-lg text-ink"
                           >
                             {sub.label}
                           </Link>
@@ -264,7 +264,7 @@ export default function Header({
                   <Link
                     href={item.href || "#"}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="font-display text-2xl text-ink"
+                    className="block py-2 font-display text-2xl text-ink"
                   >
                     {item.label}
                   </Link>

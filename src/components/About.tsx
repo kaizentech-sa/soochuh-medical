@@ -61,7 +61,7 @@ export default function About({ description }: AboutProps) {
           </dl>
 
           <div className="fade-in-up delay-500 mt-10">
-            <Link href="#team" className="btn-ghost link-underline">
+            <Link href="#team" className="btn-ghost link-underline tap">
               Meet the team →
             </Link>
           </div>

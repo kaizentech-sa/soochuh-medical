@@ -66,7 +66,7 @@ export default function Contact({
                 <Link
                   key={`${phone.number}-${i}`}
                   href={telHref(phone.number)}
-                  className="link-underline block font-display text-2xl text-white hover:text-teal-300"
+                  className="link-underline tap block font-display text-2xl text-white hover:text-teal-300"
                 >
                   {phone.number}
                   {phone.label && (
@@ -85,7 +85,7 @@ export default function Contact({
                 <MailIcon className="h-4 w-4" /> Email
               </dt>
               <dd className="mt-3">
-                <Link href={`mailto:${contactEmail}`} className="link-underline font-display text-2xl text-white hover:text-teal-300">
+                <Link href={`mailto:${contactEmail}`} className="link-underline tap font-display text-2xl text-white hover:text-teal-300">
                   {contactEmail}
                 </Link>
               </dd>
