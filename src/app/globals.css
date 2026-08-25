@@ -2,207 +2,212 @@
 @tailwind components;
 @tailwind utilities;
 
+/* =====================================================================
+   Soochuh Medical — design tokens
+   Palette anchored on the teal in the practice mark (#008080), warmed
+   with bone / clay neutrals so a medical + dental practice reads calm
+   and editorial rather than clinical.
+   ===================================================================== */
 :root {
-  --primary-teal: #5a7a7f;
-  --primary-dark: #3c4f5a;
-  --primary-light: #6b9299;
-  --bg-light: #f9f9f9;
-  --text-dark: #333333;
-  --text-muted: #666666;
-  --border-color: #e0e0e0;
+  --ink:        #14211F;
+  --ink-soft:   #3D4A48;
+  --ink-muted:  #6E7B78;
+
+  --teal-950:   #08201F;
+  --teal-900:   #0B3A38;
+  --teal-700:   #0F5C5A;
+  --teal-500:   #008080;
+  --teal-300:   #7FB8B4;
+  --teal-200:   #B7D6D2;
+  --teal-100:   #DCEBE8;
+  --teal-50:    #EFF6F4;
+
+  --clay:       #B9805F;
+  --clay-light: #D6A98C;
+  --clay-soft:  #EBD8C9;
+
+  --bone:       #FBF8F4;
+  --bone-deep:  #F3ECE4;
+  --line:       #E7DED3;
+
+  --shell:      1240px;
+  --ease-soft:  cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 html {
   scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 body {
-  font-family: 'Lato', 'Fira Sans', Arial, sans-serif;
-  color: var(--text-dark);
-  background: #ffffff;
-  line-height: 1.6;
-  font-size: 16px;
+  font-family: 'Jost', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 300;
+  color: var(--ink);
+  background: var(--bone);
+  line-height: 1.65;
+  font-size: 17px;
+  letter-spacing: 0.005em;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 600;
-  line-height: 1.3;
+h1, h2, h3, h4 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 400;
+  font-variation-settings: 'SOFT' 20, 'WONK' 1, 'opsz' 40;
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  color: var(--ink);
 }
 
-.font-heading {
-  font-family: 'Montserrat', sans-serif;
+::selection { background: var(--teal-200); color: var(--teal-950); }
+
+:focus-visible {
+  outline: 2px solid var(--teal-500);
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 
-.font-body {
-  font-family: 'Lato', 'Fira Sans', Arial, sans-serif;
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--bone-deep); }
+::-webkit-scrollbar-thumb { background: var(--teal-300); border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: var(--teal-500); }
+
+/* ===================== Layout ===================== */
+.shell { @apply mx-auto w-full max-w-shell px-6 md:px-10; }
+.section { @apply py-24 md:py-32; }
+
+/* ===================== Type helpers ===================== */
+.eyebrow {
+  @apply font-sans text-[11px] font-medium uppercase text-teal-700;
+  letter-spacing: 0.22em;
+}
+.display-xl { font-size: clamp(2.75rem, 7vw, 5.25rem); }
+.display-lg { font-size: clamp(2.25rem, 4.6vw, 3.75rem); }
+.display-md { font-size: clamp(1.75rem, 3vw, 2.5rem); }
+.lede {
+  @apply font-sans font-light text-ink-soft;
+  font-size: clamp(1.0625rem, 1.4vw, 1.25rem);
+  line-height: 1.7;
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: #f1f1f1; }
-::-webkit-scrollbar-thumb { background: var(--primary-teal); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: var(--primary-dark); }
-
-/* ===================== Scroll Animations ===================== */
-.fade-in-up {
-  opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 0.75s ease-out, transform 0.75s ease-out;
+/* A hairline rule with a single teal tick — the recurring section marker */
+.rule {
+  @apply relative block h-px w-full bg-[color:var(--line)];
 }
-.fade-in-up.visible {
-  opacity: 1;
-  transform: translateY(0);
+.rule::before {
+  content: '';
+  @apply absolute left-0 top-0 h-px w-10 bg-teal-500;
 }
-
-.fade-in {
-  opacity: 0;
-  transition: opacity 0.75s ease-out;
-}
-.fade-in.visible {
-  opacity: 1;
-}
-
-.slide-in-left {
-  opacity: 0;
-  transform: translateX(-50px);
-  transition: opacity 0.75s ease-out, transform 0.75s ease-out;
-}
-.slide-in-left.visible {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-.slide-in-right {
-  opacity: 0;
-  transform: translateX(50px);
-  transition: opacity 0.75s ease-out, transform 0.75s ease-out;
-}
-.slide-in-right.visible {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-/* Delay utilities */
-.delay-100 { transition-delay: 0.1s; }
-.delay-200 { transition-delay: 0.2s; }
-.delay-300 { transition-delay: 0.3s; }
-.delay-400 { transition-delay: 0.4s; }
-.delay-500 { transition-delay: 0.5s; }
-.delay-600 { transition-delay: 0.6s; }
 
 /* ===================== Buttons ===================== */
-.btn-primary {
-  @apply bg-[#5a7a7f] text-white px-6 py-3 rounded-sm font-medium transition-all duration-300 hover:bg-[#3c4f5a];
+.btn,
+.btn-primary,
+.btn-outline,
+.btn-clay,
+.btn-ghost {
+  @apply inline-flex items-center justify-center gap-2 font-sans text-[13px] font-medium uppercase transition-all duration-500;
+  letter-spacing: 0.14em;
+  transition-timing-function: var(--ease-soft);
 }
-.btn-outline {
-  @apply border border-[#5a7a7f] text-[#5a7a7f] px-6 py-3 rounded-sm font-medium transition-all duration-300 hover:bg-[#5a7a7f] hover:text-white;
+.btn-primary { @apply bg-teal-900 px-7 py-4 text-white hover:bg-teal-500; }
+.btn-outline { @apply border border-teal-900/25 px-7 py-4 text-teal-900 hover:border-teal-900 hover:bg-teal-900 hover:text-white; }
+.btn-clay    { @apply bg-clay px-7 py-4 text-white hover:bg-[#a06e50]; }
+.btn-ghost   { @apply text-teal-900 hover:text-teal-500; }
+
+/* Understated text link with an animated underline */
+.link-underline {
+  @apply relative inline-block;
+}
+.link-underline::after {
+  content: '';
+  @apply absolute -bottom-0.5 left-0 h-px w-full origin-right scale-x-0 bg-current transition-transform duration-500;
+  transition-timing-function: var(--ease-soft);
+}
+.link-underline:hover::after { @apply origin-left scale-x-100; }
+
+/* ===================== Signature image shapes ===================== */
+/* The arch is the brand's recurring silhouette — used for portraits,
+   treatment imagery and the hero inset. */
+.arch      { border-radius: 999px 999px 10px 10px; overflow: hidden; }
+.arch-soft { border-radius: 200px 200px 10px 10px; overflow: hidden; }
+.lozenge   { border-radius: 999px; overflow: hidden; }
+
+.img-zoom img { transition: transform 1.1s var(--ease-soft); }
+.img-zoom:hover img { transform: scale(1.05); }
+
+/* ===================== Cards ===================== */
+.card {
+  @apply border border-[color:var(--line)] bg-white transition-all duration-500;
+  transition-timing-function: var(--ease-soft);
+}
+.card:hover {
+  @apply -translate-y-1 border-teal-200;
+  box-shadow: 0 18px 40px -28px rgba(11, 58, 56, 0.45);
 }
 
-/* ===================== Service Cards ===================== */
-.service-card {
-  @apply transition-all duration-300 cursor-pointer;
+/* ===================== Scroll reveal ===================== */
+.fade-in-up,
+.fade-in,
+.slide-in-left,
+.slide-in-right {
+  opacity: 0;
+  transition: opacity 0.9s var(--ease-soft), transform 0.9s var(--ease-soft);
 }
-.service-card:hover {
-  transform: translateY(-6px);
-}
-.service-card:hover .service-icon {
-  background-color: var(--primary-teal);
+.fade-in-up      { transform: translateY(32px); }
+.slide-in-left   { transform: translateX(-40px); }
+.slide-in-right  { transform: translateX(40px); }
+
+.fade-in-up.visible,
+.fade-in.visible,
+.slide-in-left.visible,
+.slide-in-right.visible {
+  opacity: 1;
+  transform: none;
 }
 
-/* ===================== Team Cards ===================== */
-.team-card {
-  @apply transition-all duration-300;
-}
-.team-card:hover {
-  transform: scale(1.03);
-}
+.delay-100 { transition-delay: 0.08s; }
+.delay-200 { transition-delay: 0.16s; }
+.delay-300 { transition-delay: 0.24s; }
+.delay-400 { transition-delay: 0.32s; }
+.delay-500 { transition-delay: 0.40s; }
+.delay-600 { transition-delay: 0.48s; }
 
-/* ===================== Gallery ===================== */
-.gallery-item {
-  @apply overflow-hidden;
-}
-.gallery-item img {
-  @apply transition-transform duration-500;
-}
-.gallery-item:hover img {
-  transform: scale(1.08);
-}
-.gallery-slider-track {
+/* ===================== Marquee ===================== */
+.marquee-track {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   width: max-content;
-  animation: gallerySlide 40s linear infinite;
+  animation: marquee 60s linear infinite;
 }
-@keyframes gallerySlide {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
-/* ===================== Partner Logos ===================== */
-.partner-logo {
-  @apply grayscale opacity-60 transition-all duration-300 hover:grayscale-0 hover:opacity-100;
-}
-
-/* ===================== Navigation ===================== */
-.nav-item:hover .nav-dropdown {
-  @apply opacity-100 visible;
-}
-
-/* ===================== Phase Timeline ===================== */
-.phase-line {
-  @apply absolute left-0 top-0 bottom-0 w-0.5 bg-[#5a7a7f];
-}
-.phase-dot {
-  @apply absolute left-0 w-3 h-3 bg-[#5a7a7f] rounded-full transform -translate-x-1/2;
-}
-
-/* ===================== Large Ghost Text ===================== */
-.text-ghost {
-  -webkit-text-stroke: 1px rgba(255,255,255,0.12);
-  color: transparent;
+.marquee-track:hover { animation-play-state: paused; }
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
 /* ===================== Modal ===================== */
 .modal-overlay {
-  @apply fixed inset-0 bg-black/60 z-[200] flex items-center justify-center p-4;
-  animation: overlayIn 0.2s ease-out;
+  @apply fixed inset-0 z-[200] flex items-center justify-center bg-teal-950/60 p-4 backdrop-blur-sm;
+  animation: fade 0.25s ease-out;
 }
-.modal-content {
-  @apply bg-white w-full max-w-lg relative;
-  animation: modalIn 0.3s ease-out;
+.modal-panel {
+  @apply relative w-full max-w-3xl bg-bone;
+  animation: rise 0.45s var(--ease-soft);
 }
-@keyframes overlayIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-@keyframes modalIn {
-  from { opacity: 0; transform: translateY(-24px) scale(0.95); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-/* ===================== Heading Decorator ===================== */
-.heading-decorator {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.heading-decorator .bar-main {
-  width: 48px;
-  height: 3px;
-  background-color: var(--primary-teal);
-}
-.heading-decorator .bar-secondary {
-  width: 24px;
-  height: 3px;
-  background-color: #b8d4d8;
+@keyframes fade { from { opacity: 0 } to { opacity: 1 } }
+@keyframes rise {
+  from { opacity: 0; transform: translateY(20px) scale(0.98); }
+  to   { opacity: 1; transform: none; }
 }

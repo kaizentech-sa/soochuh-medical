@@ -8,48 +8,62 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        /* Anchored on the teal in the Soochuh mark (#008080) + warm neutrals */
+        ink: {
+          DEFAULT: '#14211F',
+          soft: '#3D4A48',
+          muted: '#6E7B78',
+        },
         teal: {
-          primary: '#5a7a7f',
-          dark: '#3c4f5a',
-          light: '#6b9299',
-          lighter: '#8fb3b8',
+          950: '#08201F',
+          900: '#0B3A38',
+          700: '#0F5C5A',
+          600: '#137270',
+          500: '#008080',
+          300: '#7FB8B4',
+          200: '#B7D6D2',
+          100: '#DCEBE8',
+          50:  '#EFF6F4',
         },
-        warm: {
-          accent: '#97624e',
-          light: '#ad8668',
+        clay: {
+          DEFAULT: '#B9805F',
+          light:   '#D6A98C',
+          soft:    '#EBD8C9',
         },
-        gray: {
-          bg: '#f9f9f9',
-          border: '#e0e0e0',
-        }
+        bone: {
+          DEFAULT: '#FBF8F4',
+          deep:    '#F3ECE4',
+          line:    '#E7DED3',
+        },
       },
       fontFamily: {
-        heading: ['Montserrat', 'sans-serif'],
-        body: ['Lato', 'Fira Sans', 'Arial', 'sans-serif'],
+        display: ['Fraunces', 'Georgia', 'serif'],
+        sans: ['Jost', 'Helvetica Neue', 'Arial', 'sans-serif'],
+        body: ['Jost', 'Helvetica Neue', 'Arial', 'sans-serif'],
+        heading: ['Fraunces', 'Georgia', 'serif'],
       },
-      animation: {
-        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
-        'fade-in': 'fadeIn 0.6s ease-out forwards',
-        'slide-in-left': 'slideInLeft 0.8s ease-out forwards',
-        'slide-in-right': 'slideInRight 0.8s ease-out forwards',
+      letterSpacing: {
+        eyebrow: '0.22em',
+      },
+      maxWidth: {
+        shell: '1240px',
+        prose: '68ch',
+      },
+      borderRadius: {
+        arch: '999px 999px 8px 8px',
+        lozenge: '999px',
+      },
+      transitionTimingFunction: {
+        soft: 'cubic-bezier(0.22, 1, 0.36, 1)',
       },
       keyframes: {
-        fadeInUp: {
-          '0%': { opacity: '0', transform: 'translateY(30px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
-        },
-        fadeIn: {
-          '0%': { opacity: '0' },
-          '100%': { opacity: '1' },
-        },
-        slideInLeft: {
-          '0%': { opacity: '0', transform: 'translateX(-50px)' },
-          '100%': { opacity: '1', transform: 'translateX(0)' },
-        },
-        slideInRight: {
-          '0%': { opacity: '0', transform: 'translateX(50px)' },
-          '100%': { opacity: '1', transform: 'translateX(0)' },
-        },
+        rise:   { '0%': { opacity: '0', transform: 'translateY(24px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+        fade:   { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+        marquee:{ '0%': { transform: 'translateX(0)' }, '100%': { transform: 'translateX(-50%)' } },
+      },
+      animation: {
+        rise: 'rise 0.9s cubic-bezier(0.22,1,0.36,1) forwards',
+        fade: 'fade 0.7s ease-out forwards',
       },
     },
   },

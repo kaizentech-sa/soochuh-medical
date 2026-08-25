@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { dentalServices, medicalServices } from "@/data/site";
+import { ArrowIcon } from "./icons";
 
 type ServiceItem = {
   icon: string;
@@ -10,91 +12,76 @@ type ServiceItem = {
   href?: string;
 };
 
-type ServicesProps = {
-  items?: ServiceItem[];
-};
+type ServicesProps = { items?: ServiceItem[] };
 
+/** Falls back to the practice's own service list rather than a stock grid. */
 const fallbackServices: ServiceItem[] = [
-  {
-    icon: "https://ext.same-assets.com/3349237986/2159896115.webp",
-    title: "Advanced & Cosmetic Dentistry",
-    description: "5 steps to a beautiful, natural smile",
-    href: "#",
-  },
-  {
-    icon: "https://ext.same-assets.com/3349237986/2292650844.webp",
-    title: "Clear Aligners (Invisalign)",
-    description: "Invisalign and smile straightening",
-    href: "#",
-  },
-  {
-    icon: "https://ext.same-assets.com/3349237986/798237253.webp",
-    title: "Dental Implants",
-    description: "To replace missing teeth",
-    href: "#",
-  },
-  {
-    icon: "https://ext.same-assets.com/3349237986/2535590258.webp",
-    title: "Veneers",
-    description: "Using advanced microscopic technology",
-    href: "#",
-  },
-  {
-    icon: "https://ext.same-assets.com/3349237986/1934814904.webp",
-    title: "General Dentistry",
-    description: "Because every treatment matters",
-    href: "#",
-  },
-  {
-    icon: "https://ext.same-assets.com/3349237986/766546595.webp",
-    title: "Oral Hygiene",
-    description: "Helping you look after your dental health",
-    href: "#",
-  },
+  ...dentalServices.map((s) => ({ icon: "", title: s.title, description: s.blurb, href: "#contact" })),
+  ...medicalServices.slice(0, 3).map((s) => ({ icon: "", title: s.title, description: s.blurb, href: "#contact" })),
 ];
-
-const delayClasses = ["", "delay-100", "delay-200", "delay-300", "delay-100", "delay-200"];
 
 export default function Services({ items = [] }: ServicesProps) {
   const services = items.length > 0 ? items : fallbackServices;
 
   return (
-    <section id="services" className="py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-4">
-        {/* Section Title */}
-        <div className="text-center mb-16 fade-in-up">
-          <h2 className="font-heading text-3xl md:text-4xl text-[#5a7a7f] font-semibold mb-4">
-            What We Do
-          </h2>
-          <div className="heading-decorator justify-center">
-            <span className="bar-main" />
-            <span className="bar-secondary" />
+    <section id="services" className="section bg-bone">
+      <div className="shell">
+        <div className="grid gap-8 md:grid-cols-12 md:items-end">
+          <div className="md:col-span-7">
+            <p className="eyebrow fade-in-up">01 — What we do</p>
+            <h2 className="display-lg fade-in-up delay-100 mt-5 font-display">
+              Two disciplines,
+              <span className="italic text-teal-500"> one waiting room</span>
+            </h2>
           </div>
+          <p className="lede fade-in-up delay-200 md:col-span-5">
+            A GP and a dentist in the same practice means fewer referrals, shorter
+            waits, and a team that already knows your history.
+          </p>
         </div>
 
-        {/* Services Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6">
+        <div className="rule fade-in-up delay-200 mt-14" />
+
+        {/* Numbered editorial rows — legible without relying on stock imagery */}
+        <ul className="mt-2">
           {services.map((service, index) => (
-            <Link
-              key={service.title}
-              href={service.href || "#"}
-              className={`service-card group text-center p-6 fade-in-up ${delayClasses[index]}`}
-            >
-              <div className="service-icon w-20 h-20 mx-auto mb-5 rounded-full border-2 border-[#5a7a7f] flex items-center justify-center transition-all duration-300 group-hover:bg-[#5a7a7f]">
-                <Image
-                  src={service.icon}
-                  alt={service.title}
-                  width={40}
-                  height={40}
-                  className="w-10 h-10 object-contain transition-all duration-300 group-hover:brightness-0 group-hover:invert"
-                />
-              </div>
-              <h3 className="font-heading text-sm font-semibold text-[#5a7a7f] mb-1 leading-tight">
-                {service.title}
-              </h3>
-              <p className="text-gray-500 text-xs leading-relaxed">{service.description}</p>
-            </Link>
+            <li key={service.title}>
+              <Link
+                href={service.href || "#contact"}
+                className="group grid grid-cols-[auto_1fr_auto] items-center gap-6 border-b border-[color:var(--line)] py-7 transition-colors duration-500 ease-soft hover:bg-white md:gap-10 md:px-4"
+              >
+                <span className="font-sans text-[11px] tabular-nums tracking-eyebrow text-teal-300">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+
+                <span className="grid gap-1.5 md:grid-cols-[minmax(0,22rem)_1fr] md:items-baseline md:gap-10">
+                  <span className="flex items-center gap-4">
+                    {service.icon && (
+                      <span className="relative hidden h-9 w-9 shrink-0 sm:block">
+                        <Image src={service.icon} alt="" fill className="object-contain" />
+                      </span>
+                    )}
+                    <span className="font-display text-2xl leading-tight text-ink transition-colors duration-500 group-hover:text-teal-500 md:text-[1.75rem]">
+                      {service.title}
+                    </span>
+                  </span>
+                  {service.description && (
+                    <span className="font-sans text-[15px] font-light text-ink-muted">
+                      {service.description}
+                    </span>
+                  )}
+                </span>
+
+                <ArrowIcon className="h-5 w-5 -translate-x-2 text-teal-300 opacity-0 transition-all duration-500 ease-soft group-hover:translate-x-0 group-hover:text-teal-500 group-hover:opacity-100" />
+              </Link>
+            </li>
           ))}
+        </ul>
+
+        <div className="fade-in-up mt-14">
+          <Link href="#contact" className="btn-outline">
+            Not sure what you need? Ask us
+          </Link>
         </div>
       </div>
     </section>

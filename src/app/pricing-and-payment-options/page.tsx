@@ -11,7 +11,7 @@ import { urlFor } from "../../../sanity/lib/image";
 export const metadata: Metadata = {
   title: "Pricing & payment options | Soochuh Medical",
   description:
-    "Pricing information and payment methods at Soochuh Medical, Newlands, Cape Town.",
+    "Pricing information and payment methods at Soochuh Medical, 208A Main Road, Diep River, Cape Town.",
 };
 
 type ContactSectionHeader = {
@@ -97,6 +97,7 @@ export default async function PricingAndPaymentOptionsPage() {
   return (
     <main className="min-h-screen">
       <Header
+        solid
         mainPhoneNumber={mainPhoneNumber}
         whatsappNumber={whatsappNumber}
         appointmentLink={appointmentLink}
@@ -104,57 +105,52 @@ export default async function PricingAndPaymentOptionsPage() {
         googleMapsShareLink={contactSectionData?.googleMapsShareLink}
       />
 
-      <div className="pt-20">
-        <section className="py-14 bg-white border-b border-gray-100">
-          <div className="max-w-4xl mx-auto px-4 text-center">
-            <p className="text-sm text-[#5a7a7f] font-medium uppercase tracking-wider mb-3">
-              Patient corner
-            </p>
-            <h1 className="font-heading text-3xl md:text-4xl text-[#3c4f5a] font-semibold mb-4">
-              {pageTitle}
-            </h1>
-            <div className="heading-decorator justify-center mb-8">
-              <span className="bar-main" />
-              <span className="bar-secondary" />
-            </div>
-            <p className="text-gray-600 text-lg leading-relaxed">{intro}</p>
+      <div id="main" className="pt-28 md:pt-32">
+        {/* Page head */}
+        <section className="bg-bone pb-16 pt-10 md:pb-24">
+          <div className="shell max-w-3xl">
+            <p className="eyebrow">Patients</p>
+            <h1 className="display-lg mt-5 font-display">{pageTitle}</h1>
+            <div className="rule mt-8" />
+            <p className="lede mt-8">{intro}</p>
             {callout ? (
-              <p className="mt-8 text-left md:text-center rounded-sm bg-[#eef4f5] border border-[#d0dfe2] text-[#3c4f5a] px-5 py-4 text-base leading-relaxed">
+              <p className="mt-8 border-l-2 border-teal-500 bg-teal-50 px-6 py-5 font-sans font-light leading-relaxed text-teal-900">
                 {callout}
               </p>
             ) : null}
           </div>
         </section>
 
-        <section className="py-14 bg-[#fafafa]">
-          <div className="max-w-5xl mx-auto px-4">
-            <h2 className="font-heading text-2xl text-[#5a7a7f] font-semibold text-center mb-10">
-              Fee guide
-            </h2>
-            <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {/* Fee guide */}
+        <section className="border-t border-[color:var(--line)] bg-white py-20 md:py-28">
+          <div className="shell">
+            <p className="eyebrow">Fee guide</p>
+            <div className="rule mt-6" />
+            <ul className="mt-2">
               {pricingOptions.map((option, index) => (
                 <li
                   key={`${option.title ?? "option"}-${index}`}
-                  className="bg-white rounded-sm border border-gray-200 p-6 shadow-sm flex flex-col"
+                  className="grid grid-cols-[auto_1fr] items-start gap-6 border-b border-[color:var(--line)] py-8 md:grid-cols-[auto_minmax(0,20rem)_1fr_auto] md:items-baseline md:gap-10"
                 >
-                  <h3 className="font-heading text-lg font-semibold text-[#3c4f5a] mb-2">
-                    {option.title}
-                  </h3>
-                  {option.description ? (
-                    <p className="text-gray-600 text-sm leading-relaxed flex-1 mb-4">
-                      {option.description}
-                    </p>
-                  ) : (
-                    <div className="flex-1" />
-                  )}
+                  <span className="font-sans text-[11px] tabular-nums tracking-eyebrow text-teal-300">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <h2 className="font-display text-2xl text-ink">{option.title}</h2>
+                  <div className="col-span-2 md:col-span-1">
+                    {option.description ? (
+                      <p className="font-sans text-[15px] font-light text-ink-muted">
+                        {option.description}
+                      </p>
+                    ) : null}
+                    {option.notes ? (
+                      <p className="mt-2 font-sans text-[13px] font-light text-ink-muted/80">
+                        {option.notes}
+                      </p>
+                    ) : null}
+                  </div>
                   {option.price ? (
-                    <p className="text-[#5a7a7f] font-semibold text-lg mb-1">
+                    <p className="col-span-2 font-display text-xl text-teal-700 md:col-span-1 md:text-right">
                       {option.price}
-                    </p>
-                  ) : null}
-                  {option.notes ? (
-                    <p className="text-gray-500 text-xs leading-relaxed">
-                      {option.notes}
                     </p>
                   ) : null}
                 </li>
@@ -163,19 +159,15 @@ export default async function PricingAndPaymentOptionsPage() {
           </div>
         </section>
 
-        <section className="py-14 bg-white">
-          <div className="max-w-5xl mx-auto px-4">
-            <h2 className="font-heading text-2xl text-[#5a7a7f] font-semibold text-center mb-10">
-              {paymentMethodsTitle}
-            </h2>
-            <div className="flex flex-wrap justify-center gap-6 md:gap-10">
+        {/* Payment methods */}
+        <section className="bg-bone py-20 md:py-28">
+          <div className="shell">
+            <p className="eyebrow">{paymentMethodsTitle}</p>
+            <div className="mt-10 flex flex-wrap gap-6">
               {useCmsPayments
                 ? cmsPayments.map((method) => (
-                    <div
-                      key={method.name}
-                      className="flex flex-col items-center gap-2 w-[140px]"
-                    >
-                      <div className="relative h-16 w-full flex items-center justify-center rounded-sm border border-gray-200 bg-white p-2">
+                    <div key={method.name} className="flex w-[150px] flex-col items-center gap-3">
+                      <div className="grid h-20 w-full place-items-center border border-[color:var(--line)] bg-white p-3">
                         <Image
                           src={urlFor(method.logo!).width(280).height(140).fit("max").url()}
                           alt={method.name ?? "Payment method"}
@@ -184,54 +176,51 @@ export default async function PricingAndPaymentOptionsPage() {
                           className="max-h-12 w-auto object-contain"
                         />
                       </div>
-                      <span className="text-xs text-center text-gray-600">
+                      <span className="text-center font-sans text-[12px] text-ink-muted">
                         {method.name}
                       </span>
                     </div>
                   ))
                 : pricingPaymentFallback.paymentMethods.map((method) => (
-                    <div
-                      key={method.name}
-                      className="flex flex-col items-center gap-2 w-[140px]"
-                    >
-                      <div
-                        className={`h-16 w-full rounded-sm flex items-center justify-center text-white text-sm font-semibold shadow-sm ${method.accentClass}`}
-                      >
+                    <div key={method.name} className="flex w-[150px] flex-col items-center gap-3">
+                      <div className="grid h-20 w-full place-items-center border border-dashed border-teal-200 bg-white font-display text-2xl text-teal-300">
                         {method.name.slice(0, 2).toUpperCase()}
                       </div>
-                      <span className="text-xs text-center text-gray-600">
+                      <span className="text-center font-sans text-[12px] text-ink-muted">
                         {method.name}
                       </span>
                     </div>
                   ))}
             </div>
             {!useCmsPayments ? (
-              <p className="text-center text-sm text-gray-500 mt-8 max-w-xl mx-auto">
-                Upload payment logos in Sanity Studio under{" "}
-                <strong>Pricing &amp; Payment Page</strong> to replace these
-                placeholders.
+              <p className="mt-8 max-w-xl font-sans text-[13px] font-light text-ink-muted">
+                Placeholders. Upload payment logos in Sanity Studio under{" "}
+                <strong className="font-medium">Pricing &amp; Payment Page</strong> to replace them.
               </p>
             ) : null}
           </div>
         </section>
 
-        <section className="py-10 bg-[#fafafa] border-t border-gray-100">
-          <div className="max-w-3xl mx-auto px-4 text-center">
-            <Link
-              href="/"
-              className="text-[#5a7a7f] font-medium hover:text-[#3c4f5a] underline-offset-4 hover:underline"
-            >
-              ← Back to home
-            </Link>
+        {/* Close */}
+        <section className="border-t border-[color:var(--line)] bg-white py-16">
+          <div className="shell flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
+            <p className="max-w-md font-display text-2xl text-ink">
+              Still not sure what a visit will cost? Ask us before you book.
+            </p>
+            <div className="flex gap-3">
+              <Link href="/#contact" className="btn-primary">Get in touch</Link>
+              <Link href="/" className="btn-outline">Back to home</Link>
+            </div>
           </div>
         </section>
 
-        <Footer />
+        <Footer googleMapsShareLink={contactSectionData?.googleMapsShareLink} />
       </div>
 
       <ContactBar
         mainPhoneNumber={mainPhoneNumber}
         whatsappNumber={whatsappNumber}
+        appointmentLink={appointmentLink}
       />
     </main>
   );

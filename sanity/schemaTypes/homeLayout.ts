@@ -33,7 +33,7 @@ export const homeLayoutType = defineType({
             return "Add at least one section.";
           }
           const values = items
-            .map((item: { section?: string }) => item?.section)
+            .map((item) => (item as { section?: string } | null)?.section)
             .filter(Boolean) as string[];
           if (new Set(values).size !== values.length) {
             return "Each section can only appear once.";

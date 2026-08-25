@@ -2,55 +2,31 @@
 
 import Image from "next/image";
 
-type Collaborator = {
-  name: string;
-  logo: string;
-};
+type Collaborator = { name: string; logo: string };
+type PartnersProps = { collaborators?: Collaborator[] };
 
-type PartnersProps = {
-  collaborators?: Collaborator[];
-};
-
-const fallbackPartners: Collaborator[] = [
-  { name: "Slow Dentistry", logo: "https://ext.same-assets.com/3349237986/3011176184.webp" },
-  { name: "Style Italiano", logo: "https://ext.same-assets.com/3349237986/76657964.webp" },
-  { name: "SAAAD", logo: "https://ext.same-assets.com/3349237986/2469611337.jpeg" },
-  { name: "Di Ceram", logo: "https://ext.same-assets.com/3349237986/2421002194.webp" },
-  { name: "Ceramiart", logo: "https://ext.same-assets.com/3349237986/269480022.webp" },
-  { name: "ITI", logo: "https://www.smithandvanlierop.co.za/images/ITI-2.jpg" },
-];
-
+/**
+ * No fallback logos: the previous set belonged to another practice and
+ * implying accreditations the practice does not hold is a real risk.
+ * Add real affiliations in the Studio to bring this section back.
+ */
 export default function Partners({ collaborators = [] }: PartnersProps) {
-  const partners = collaborators.length > 0 ? collaborators : fallbackPartners;
+  if (collaborators.length === 0) return null;
 
   return (
-    <section className="py-16 bg-gray-50">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="text-center mb-12 fade-in-up">
-          <h3 className="text-[#5a7a7f] text-sm font-medium tracking-widest uppercase mb-4">
-            We work with the best, for you.
-          </h3>
-          <p className="text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            At Soochuh Medical, our clinicians are recognised by leading industry
-            organisations and collaborate with trusted healthcare partners to
-            deliver exceptional, patient-centred care.
-          </p>
-        </div>
-
-        <div className="flex flex-wrap justify-center items-center gap-10 md:gap-16 fade-in-up delay-200">
-          {partners.map((partner) => (
-            <div
+    <section className="border-y border-[color:var(--line)] bg-bone py-16">
+      <div className="shell">
+        <p className="eyebrow fade-in-up text-center">Affiliations</p>
+        <div className="fade-in-up delay-200 mt-10 flex flex-wrap items-center justify-center gap-x-16 gap-y-10">
+          {collaborators.map((partner) => (
+            <Image
               key={partner.name}
-              className="partner-logo flex items-center justify-center"
-            >
-              <Image
-                src={partner.logo}
-                alt={partner.name}
-                width={130}
-                height={65}
-                className="h-12 w-auto object-contain"
-              />
-            </div>
+              src={partner.logo}
+              alt={partner.name}
+              width={140}
+              height={70}
+              className="h-11 w-auto object-contain opacity-45 grayscale transition-all duration-700 ease-soft hover:opacity-100 hover:grayscale-0"
+            />
           ))}
         </div>
       </div>

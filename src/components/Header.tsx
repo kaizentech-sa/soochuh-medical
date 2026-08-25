@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { siteConfig, telHref, whatsAppHref } from "@/data/site";
+import { ChevronIcon, PhoneIcon, PinIcon, WhatsAppIcon } from "./icons";
 
 type HeaderProps = {
   mainPhoneNumber?: string;
@@ -10,15 +12,12 @@ type HeaderProps = {
   appointmentLink?: string;
   healthcareFields?: string[];
   googleMapsShareLink?: string;
+  /** Pages without a full-bleed hero start in the solid state. */
+  solid?: boolean;
 };
 
-function toTelHref(number: string) {
-  return `tel:${number.replace(/\s+/g, "")}`;
-}
-
-function toWhatsAppHref(number: string) {
-  return `https://wa.me/${number.replace(/\D+/g, "")}`;
-}
+type NavLink = { label: string; href: string };
+type NavItem = { label: string; href?: string; dropdown?: NavLink[] };
 
 export default function Header({
   mainPhoneNumber,
@@ -26,126 +25,165 @@ export default function Header({
   appointmentLink,
   healthcareFields = [],
   googleMapsShareLink,
+  solid = false,
 }: HeaderProps) {
-  const serviceDropdown =
+  const [scrolled, setScrolled] = useState(solid);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+
+  const phone = mainPhoneNumber || siteConfig.phone;
+  const whatsapp = whatsappNumber || siteConfig.whatsapp;
+  const bookHref = appointmentLink || "#contact";
+
+  useEffect(() => {
+    if (solid) return;
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [solid]);
+
+  useEffect(() => {
+    document.body.style.overflow = mobileMenuOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileMenuOpen]);
+
+  const treatments: NavLink[] =
     healthcareFields.length > 0
       ? healthcareFields.map((field) => ({ label: field, href: "#services" }))
       : [
-          { label: "Advanced & Cosmetic Dentistry", href: "#services" },
-          { label: "Smile Makeovers", href: "#" },
-          { label: "Veneers", href: "#" },
-          { label: "Dental Bonding", href: "#" },
-          { label: "Implants", href: "#" },
-          { label: "General Dentistry", href: "#" },
-          { label: "Oral Hygiene", href: "#" },
-          { label: "Invisalign", href: "#" },
+          { label: "General dentistry", href: "#services" },
+          { label: "Aesthetic dentistry", href: "#services" },
+          { label: "Root canal treatment", href: "#services" },
+          { label: "Oral hygiene", href: "#services" },
+          { label: "Teeth whitening", href: "#services" },
+          { label: "General practice & family medicine", href: "#services" },
         ];
 
-  const navItems = [
+  const navItems: NavItem[] = [
+    { label: "Treatments", dropdown: treatments },
     {
-      label: "About Us",
+      label: "The practice",
       dropdown: [
         { label: "What makes us different", href: "#difference" },
         { label: "Meet the team", href: "#team" },
+        { label: "Inside the practice", href: "#gallery" },
       ],
-    },
-    {
-      label: "Services",
-      dropdown: serviceDropdown,
-    },
-    {
-      label: "Soochuh Products",
-      dropdown: [{ label: "Scrubs", href: "https://www.soochuh.com/" }],
     },
     { label: "Reviews", href: "#testimonials" },
     {
-      label: "Patient Corner",
+      label: "Patients",
       dropdown: [
-        { label: "First Visit", href: "#" },
-        { label: "Pricing and Payment Options", href: "/pricing-and-payment-options" },
-        { label: "FAQs", href: "#" },
+        { label: "Your first visit", href: "#difference" },
+        { label: "Pricing & payment options", href: "/pricing-and-payment-options" },
       ],
     },
-    {
-      label: "Contact Us",
-      dropdown: [
-        { label: "Make an Appointment", href: appointmentLink || "#contact" },
-        { label: "Find Us On Google Maps", href: googleMapsShareLink || "#" },
-      ],
-    },
+    { label: "Contact", href: "#contact" },
   ];
 
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const phone = mainPhoneNumber || "+27 21 671 1504";
-  const whatsapp = whatsappNumber || "27611729560";
-  const globalAppointmentLink = appointmentLink || "#contact";
+  const onLight = scrolled || mobileMenuOpen;
 
   return (
-    <>
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex items-center justify-between py-3">
-          {/* Logo */}
-          <Link href="/" className="flex items-center">
-            <Image
-              src="/Untitled design.svg"
-              alt="Smith & Van Lierop Dentistry"
-              width={180}
-              height={60}
-              className="h-12 w-auto"
-            />
+    <header className="fixed inset-x-0 top-0 z-50">
+      {/* Utility strip — address and phone, always available */}
+      <div
+        className={`hidden border-b transition-colors duration-500 lg:block ${
+          onLight
+            ? "border-transparent bg-teal-900 text-white/80"
+            : "border-white/15 bg-teal-950/25 text-white/80 backdrop-blur-sm"
+        }`}
+      >
+        <div className="shell flex items-center justify-between py-2 font-sans text-[11px] uppercase tracking-eyebrow">
+          <a
+            href={googleMapsShareLink || "#contact"}
+            target={googleMapsShareLink ? "_blank" : undefined}
+            rel="noreferrer"
+            className="link-underline flex items-center gap-2 hover:text-white"
+          >
+            <PinIcon className="h-3.5 w-3.5" />
+            {siteConfig.addressText}
+          </a>
+          <div className="flex items-center gap-6">
+            <span className="hidden xl:inline">{siteConfig.positioning}</span>
+            <Link href={telHref(phone)} className="link-underline flex items-center gap-2 hover:text-white">
+              <PhoneIcon className="h-3.5 w-3.5" />
+              {phone}
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* Main bar */}
+      <div
+        className={`transition-all duration-500 ${
+          onLight ? "bg-bone/95 shadow-[0_1px_0_0_var(--line)] backdrop-blur-md" : "bg-transparent"
+        }`}
+      >
+        <div className="shell flex items-center justify-between py-4">
+          <Link href="/" className="flex items-center gap-3" aria-label="Soochuh Medical — home">
+            <span
+              className={`relative block h-11 w-11 shrink-0 transition-opacity duration-500 ${
+                onLight ? "" : "brightness-0 invert"
+              }`}
+            >
+              <Image
+                src="/Untitled design.svg"
+                alt=""
+                fill
+                className="object-contain"
+                priority
+              />
+            </span>
+            <span className="leading-none">
+              <span
+                className={`block font-display text-xl tracking-tight transition-colors duration-500 ${
+                  onLight ? "text-ink" : "text-white"
+                }`}
+              >
+                Soochuh
+              </span>
+              <span
+                className={`mt-0.5 block font-sans text-[9px] uppercase tracking-eyebrow transition-colors duration-500 ${
+                  onLight ? "text-teal-700" : "text-white/70"
+                }`}
+              >
+                Medical
+              </span>
+            </span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-6">
+          <nav className="hidden items-center gap-8 lg:flex">
             {navItems.map((item) => (
               <div
                 key={item.label}
-                className="nav-item relative"
+                className="relative"
                 onMouseEnter={() => setActiveDropdown(item.label)}
                 onMouseLeave={() => setActiveDropdown(null)}
               >
                 <Link
                   href={item.href || "#"}
-                  className="text-sm text-gray-700 hover:text-[#5a7a7f] font-medium flex items-center gap-1 py-2"
+                  className={`flex items-center gap-1.5 py-3 font-sans text-[12px] uppercase tracking-eyebrow transition-colors duration-300 ${
+                    onLight ? "text-ink-soft hover:text-teal-500" : "text-white/85 hover:text-white"
+                  }`}
                 >
                   {item.label}
-                  {item.dropdown && (
-                    <svg
-                      className="w-3 h-3"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
-                  )}
+                  {item.dropdown && <ChevronIcon className="h-2.5 w-2.5" />}
                 </Link>
                 {item.dropdown && activeDropdown === item.label && (
-                  <div className="absolute top-full left-0 bg-white shadow-lg min-w-[220px] py-2 rounded-sm border border-gray-100">
-                    {item.dropdown.map((subItem) => {
-                      const external = subItem.href.startsWith("http");
-                      const className =
-                        "block px-4 py-2 text-sm text-gray-600 hover:bg-[#5a7a7f] hover:text-white transition-colors";
+                  <div className="absolute left-1/2 top-full min-w-[268px] -translate-x-1/2 border border-[color:var(--line)] bg-bone p-2 shadow-[0_24px_60px_-40px_rgba(11,58,56,0.55)]">
+                    {item.dropdown.map((sub) => {
+                      const external = sub.href.startsWith("http");
+                      const cls =
+                        "block px-4 py-2.5 font-sans text-[13px] text-ink-soft transition-colors duration-300 hover:bg-teal-50 hover:text-teal-700";
                       return external ? (
-                        <a
-                          key={subItem.label}
-                          href={subItem.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={className}
-                        >
-                          {subItem.label}
+                        <a key={sub.label} href={sub.href} target="_blank" rel="noreferrer" className={cls}>
+                          {sub.label}
                         </a>
                       ) : (
-                        <Link key={subItem.label} href={subItem.href} className={className}>
-                          {subItem.label}
+                        <Link key={sub.label} href={sub.href} className={cls}>
+                          {sub.label}
                         </Link>
                       );
                     })}
@@ -155,165 +193,102 @@ export default function Header({
             ))}
           </nav>
 
-          {/* Contact Buttons */}
-          <div className="hidden lg:flex items-center space-x-3">
+          <div className="hidden items-center gap-3 lg:flex">
             <Link
-              href={globalAppointmentLink}
-              className="text-xs font-medium text-white bg-[#5a7a7f] hover:bg-[#3c4f5a] uppercase tracking-wider px-4 py-2 rounded-sm transition-colors"
-            >
-              Make An Appointment
-            </Link>
-            <Link
-              href={toWhatsAppHref(whatsapp)}
+              href={whatsAppHref(whatsapp)}
               target="_blank"
-              className="bg-[#25D366] text-white p-2 rounded-full hover:bg-[#128C7E] transition-colors"
+              aria-label="Message Soochuh Medical on WhatsApp"
+              className={`grid h-10 w-10 place-items-center rounded-full border transition-colors duration-500 ${
+                onLight
+                  ? "border-teal-900/20 text-teal-700 hover:border-teal-500 hover:bg-teal-500 hover:text-white"
+                  : "border-white/35 text-white hover:bg-white hover:text-teal-900"
+              }`}
             >
-              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-              </svg>
+              <WhatsAppIcon className="h-4 w-4" />
             </Link>
             <Link
-              href={toTelHref(phone)}
-              className="bg-[#3c4f5a] text-white px-4 py-2 rounded-full flex items-center gap-2 text-sm font-medium hover:bg-[#5a7a7f] transition-colors"
+              href={bookHref}
+              className={`btn px-6 py-3.5 ${
+                onLight
+                  ? "bg-teal-900 text-white hover:bg-teal-500"
+                  : "bg-white text-teal-900 hover:bg-teal-500 hover:text-white"
+              }`}
             >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                />
-              </svg>
-              {phone}
+              Book a visit
             </Link>
           </div>
 
-          {/* Mobile Menu Button */}
           <button
             type="button"
-            className="lg:hidden p-2 text-gray-600"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileMenuOpen}
+            className={`-mr-2 p-2 lg:hidden ${onLight ? "text-ink" : "text-white"}`}
+            onClick={() => setMobileMenuOpen((v) => !v)}
           >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <span className="sr-only">Menu</span>
+            <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
               {mobileMenuOpen ? (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
+                <path strokeLinecap="round" d="M6 18L18 6M6 6l12 12" />
               ) : (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
+                <path strokeLinecap="round" d="M4 7h16M4 12h16M4 17h16" />
               )}
             </svg>
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-white border-t">
-          <div className="px-4 py-4 space-y-4">
+        <div className="h-[calc(100dvh-72px)] overflow-y-auto bg-bone lg:hidden">
+          <div className="shell space-y-8 py-8">
             {navItems.map((item) => (
               <div key={item.label}>
                 {item.dropdown ? (
-                  <div className="space-y-2">
-                    <div className="text-gray-700 font-medium py-2">{item.label}</div>
-                    <ul className="pl-3 space-y-2 border-l-2 border-gray-100 ml-1">
-                      {item.dropdown.map((subItem) => {
-                        const external = subItem.href.startsWith("http");
-                        const className =
-                          "block text-sm text-gray-600 py-1 hover:text-[#5a7a7f]";
-                        const close = () => setMobileMenuOpen(false);
-                        return (
-                          <li key={subItem.label}>
-                            {external ? (
-                              <a
-                                href={subItem.href}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className={className}
-                                onClick={close}
-                              >
-                                {subItem.label}
-                              </a>
-                            ) : (
-                              <Link href={subItem.href} className={className} onClick={close}>
-                                {subItem.label}
-                              </Link>
-                            )}
-                          </li>
-                        );
-                      })}
+                  <>
+                    <p className="eyebrow mb-3">{item.label}</p>
+                    <ul className="space-y-3 border-l border-[color:var(--line)] pl-4">
+                      {item.dropdown.map((sub) => (
+                        <li key={sub.label}>
+                          <Link
+                            href={sub.href}
+                            onClick={() => setMobileMenuOpen(false)}
+                            className="font-display text-lg text-ink"
+                          >
+                            {sub.label}
+                          </Link>
+                        </li>
+                      ))}
                     </ul>
-                  </div>
+                  </>
                 ) : (
                   <Link
                     href={item.href || "#"}
-                    className="block text-gray-700 font-medium py-2"
                     onClick={() => setMobileMenuOpen(false)}
+                    className="font-display text-2xl text-ink"
                   >
                     {item.label}
                   </Link>
                 )}
               </div>
             ))}
-            <Link
-              href={globalAppointmentLink}
-              onClick={() => setMobileMenuOpen(false)}
-              className="w-full bg-[#5a7a7f] text-white py-3 rounded-sm text-sm font-medium hover:bg-[#3c4f5a] transition-colors"
-            >
-              Make An Appointment
-            </Link>
-            <div className="pt-4 border-t flex gap-3">
-              <Link
-                href={toWhatsAppHref(whatsapp)}
-                target="_blank"
-                className="bg-[#25D366] text-white p-3 rounded-full"
-              >
-                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                </svg>
+
+            <div className="space-y-3 border-t border-[color:var(--line)] pt-8">
+              <Link href={bookHref} onClick={() => setMobileMenuOpen(false)} className="btn-primary w-full">
+                Book a visit
               </Link>
-              <Link
-                href={toTelHref(phone)}
-                className="bg-[#3c4f5a] text-white px-4 py-3 rounded-full flex items-center gap-2 text-sm font-medium"
-              >
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                  />
-                </svg>
-                Call Us
-              </Link>
+              <div className="grid grid-cols-2 gap-3">
+                <Link href={telHref(phone)} className="btn-outline w-full">
+                  <PhoneIcon className="h-4 w-4" /> Call
+                </Link>
+                <Link href={whatsAppHref(whatsapp)} target="_blank" className="btn-outline w-full">
+                  <WhatsAppIcon className="h-4 w-4" /> WhatsApp
+                </Link>
+              </div>
+              <p className="pt-4 font-sans text-sm text-ink-muted">{siteConfig.addressText}</p>
             </div>
           </div>
         </div>
       )}
     </header>
-    </>
   );
 }

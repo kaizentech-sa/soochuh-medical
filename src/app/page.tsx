@@ -418,6 +418,7 @@ export default async function Home() {
         slides={heroSlides}
         mainPhoneNumber={mainPhoneNumber}
         whatsappNumber={whatsappNumber}
+        appointmentLink={appointmentLink}
       />
     ),
     whatWeDo: <Services items={whatWeDoItems} />,
@@ -449,6 +450,7 @@ export default async function Home() {
         whatsappNumber={whatsappNumber}
         address={contactSectionData?.address}
         email={contactSectionData?.email}
+        appointmentLink={appointmentLink}
       />
     ),
   };
@@ -463,15 +465,16 @@ export default async function Home() {
         healthcareFields={healthcareFieldTitles}
         googleMapsShareLink={contactSectionData?.googleMapsShareLink}
       />
-      <div className="pt-20">
+      <div id="main">
         {homeSectionOrder.map((sectionId) => (
           <Fragment key={sectionId}>{sectionBlocks[sectionId]}</Fragment>
         ))}
-        <Footer />
+        <Footer googleMapsShareLink={contactSectionData?.googleMapsShareLink} />
       </div>
       <ContactBar
         mainPhoneNumber={mainPhoneNumber}
         whatsappNumber={whatsappNumber}
+        appointmentLink={appointmentLink}
       />
     </main>
   );
