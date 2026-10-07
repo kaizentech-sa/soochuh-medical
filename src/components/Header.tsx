@@ -1,294 +1,235 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { siteConfig, telHref, whatsAppHref } from "@/data/site";
-import { ChevronIcon, PhoneIcon, PinIcon, WhatsAppIcon } from "./icons";
+import { usePathname } from "next/navigation";
+import { defaultWhatsAppMessage, siteConfig, telHref, whatsAppHref } from "@/data/site";
+import { dentalTreatments, medicalTreatments, treatmentHref } from "@/data/treatments";
+import Logo from "./ui/Logo";
+import { CaretDown, List, Phone, WhatsappLogo, X } from "./icons";
 
-type HeaderProps = {
-  mainPhoneNumber?: string;
-  whatsappNumber?: string;
-  appointmentLink?: string;
-  healthcareFields?: string[];
-  googleMapsShareLink?: string;
-  /** Pages without a full-bleed hero start in the solid state. */
-  solid?: boolean;
-};
+const links = [
+  { label: "Doctors", href: "/#doctors" },
+  { label: "Fees", href: "/fees" },
+  { label: "FAQs", href: "/#faq" },
+  { label: "Contact", href: "/#contact" },
+];
 
-type NavLink = { label: string; href: string };
-type NavItem = { label: string; href?: string; dropdown?: NavLink[] };
+export default function Header() {
+  const pathname = usePathname();
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [megaOpen, setMegaOpen] = useState(false);
+  const [overHero, setOverHero] = useState(false);
+  const sentinel = useRef<HTMLDivElement>(null);
+  const closeTimer = useRef<number | null>(null);
 
-export default function Header({
-  mainPhoneNumber,
-  whatsappNumber,
-  appointmentLink,
-  healthcareFields = [],
-  googleMapsShareLink,
-  solid = false,
-}: HeaderProps) {
-  const [scrolled, setScrolled] = useState(solid);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  // Shadow appears once the page has moved: observed, not scroll-polled.
+  useEffect(() => {
+    const el = sentinel.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([entry]) => setScrolled(!entry.isIntersecting));
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
-  const phone = mainPhoneNumber || siteConfig.phone;
-  const whatsapp = whatsappNumber || siteConfig.whatsapp;
-  const bookHref = appointmentLink || "#contact";
+  // Transparent over a full-bleed hero (home only) until the hero's end
+  // passes under the bar. Pages without #hero-sentinel stay solid.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: re-check per route
+  useEffect(() => {
+    const el = document.getElementById("hero-sentinel");
+    if (!el) {
+      setOverHero(false);
+      return;
+    }
+    const io = new IntersectionObserver(
+      ([entry]) => setOverHero(entry.isIntersecting || entry.boundingClientRect.top > 72),
+      { rootMargin: "-72px 0px 0px 0px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [pathname]);
 
   useEffect(() => {
-    if (solid) return;
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [solid]);
-
-  useEffect(() => {
-    document.body.style.overflow = mobileMenuOpen ? "hidden" : "";
+    document.body.style.overflow = menuOpen ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
-  }, [mobileMenuOpen]);
+  }, [menuOpen]);
 
-  const treatments: NavLink[] =
-    healthcareFields.length > 0
-      ? healthcareFields.map((field) => ({ label: field, href: "#services" }))
-      : [
-          { label: "General dentistry", href: "#services" },
-          { label: "Aesthetic dentistry", href: "#services" },
-          { label: "Root canal treatment", href: "#services" },
-          { label: "Oral hygiene", href: "#services" },
-          { label: "Teeth whitening", href: "#services" },
-          { label: "General practice & family medicine", href: "#services" },
-        ];
+  // biome-ignore lint/correctness/useExhaustiveDependencies: close menus on route change
+  useEffect(() => {
+    setMenuOpen(false);
+    setMegaOpen(false);
+  }, [pathname]);
 
-  const navItems: NavItem[] = [
-    { label: "Treatments", dropdown: treatments },
-    {
-      label: "The practice",
-      dropdown: [
-        { label: "What makes us different", href: "#difference" },
-        { label: "Meet the team", href: "#team" },
-        { label: "Inside the practice", href: "#gallery" },
-      ],
-    },
-    { label: "Reviews", href: "#testimonials" },
-    {
-      label: "Patients",
-      dropdown: [
-        { label: "Your first visit", href: "#difference" },
-        { label: "Pricing & payment options", href: "/pricing-and-payment-options" },
-      ],
-    },
-    { label: "Contact", href: "#contact" },
-  ];
+  useEffect(() => {
+    if (!megaOpen) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setMegaOpen(false);
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [megaOpen]);
 
-  const onLight = scrolled || mobileMenuOpen;
+  const openMega = () => {
+    if (closeTimer.current) window.clearTimeout(closeTimer.current);
+    setMegaOpen(true);
+  };
+  const closeMega = () => {
+    closeTimer.current = window.setTimeout(() => setMegaOpen(false), 140);
+  };
+
+  const clear = overHero && !menuOpen && !megaOpen;
+  const navLink = clear
+    ? "text-white/90 hover:bg-white/10 hover:text-white"
+    : "text-ink-soft hover:bg-mist hover:text-ink";
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50">
-      {/* Utility strip — address and phone, always available */}
-      <div
-        className={`hidden border-b transition-colors duration-500 lg:block ${
-          onLight
-            ? "border-transparent bg-teal-900 text-white/80"
-            : "border-white/15 bg-teal-950/25 text-white/80 backdrop-blur-sm"
-        }`}
+    <>
+      <div ref={sentinel} aria-hidden="true" className="pointer-events-none absolute left-0 top-0 h-2 w-px" />
+      <header
+        className={`sticky top-0 z-50 transition-[background-color,box-shadow,backdrop-filter] duration-500 ${
+          clear ? "bg-transparent" : "bg-paper/90 backdrop-blur-xl"
+        } ${!clear && (scrolled || menuOpen) ? "shadow-[0_1px_0_0_var(--line)]" : ""}`}
       >
-        <div className="shell flex items-center justify-between py-2 font-sans text-[11px] uppercase tracking-eyebrow">
-          <a
-            href={googleMapsShareLink || "#contact"}
-            target={googleMapsShareLink ? "_blank" : undefined}
-            rel="noreferrer"
-            className="link-underline flex items-center gap-2 hover:text-white"
-          >
-            <PinIcon className="h-3.5 w-3.5" />
-            {siteConfig.addressText}
-          </a>
-          <div className="flex items-center gap-6">
-            <span className="hidden xl:inline">{siteConfig.positioning}</span>
-            <Link href={telHref(phone)} className="link-underline flex items-center gap-2 hover:text-white">
-              <PhoneIcon className="h-3.5 w-3.5" />
-              {phone}
-            </Link>
-          </div>
-        </div>
-      </div>
+        <div className="shell flex h-[72px] items-center justify-between gap-6">
+          <Logo tone={clear ? "light" : "dark"} />
 
-      {/* Main bar */}
-      <div
-        className={`transition-all duration-500 ${
-          onLight ? "bg-bone/95 shadow-[0_1px_0_0_var(--line)] backdrop-blur-md" : "bg-transparent"
-        }`}
-      >
-        <div className="shell flex items-center justify-between py-4">
-          <Link href="/" className="flex items-center gap-3" aria-label="Soochuh Medical — home">
-            <span
-              className={`relative block h-11 w-11 shrink-0 transition-opacity duration-500 ${
-                onLight ? "" : "brightness-0 invert"
-              }`}
-            >
-              <Image
-                src="/Untitled design.svg"
-                alt=""
-                fill
-                className="object-contain"
-                priority
-              />
-            </span>
-            <span className="leading-none">
-              <span
-                className={`block font-display text-xl tracking-tight transition-colors duration-500 ${
-                  onLight ? "text-ink" : "text-white"
-                }`}
+          <nav className="hidden items-center gap-0.5 lg:flex xl:gap-1" aria-label="Main">
+            <div className="relative" onMouseEnter={openMega} onMouseLeave={closeMega}>
+              <button
+                type="button"
+                aria-expanded={megaOpen}
+                aria-controls="treatments-menu"
+                onClick={() => setMegaOpen((v) => !v)}
+                className={`flex h-10 items-center gap-1.5 rounded-control px-3.5 text-[15px] font-medium transition-colors ${navLink}`}
               >
-                Soochuh
-              </span>
-              <span
-                className={`mt-0.5 block font-sans text-[9px] uppercase tracking-eyebrow transition-colors duration-500 ${
-                  onLight ? "text-teal-700" : "text-white/70"
-                }`}
-              >
-                Medical
-              </span>
-            </span>
-          </Link>
+                Treatments
+                <CaretDown size={14} weight="bold" className={`transition-transform duration-300 ${megaOpen ? "rotate-180" : ""}`} />
+              </button>
 
-          <nav className="hidden items-center gap-8 lg:flex">
-            {navItems.map((item) => (
-              <div
-                key={item.label}
-                className="relative"
-                onMouseEnter={() => setActiveDropdown(item.label)}
-                onMouseLeave={() => setActiveDropdown(null)}
-              >
-                <Link
-                  href={item.href || "#"}
-                  className={`flex items-center gap-1.5 py-3 font-sans text-[12px] uppercase tracking-eyebrow transition-colors duration-300 ${
-                    onLight ? "text-ink-soft hover:text-teal-500" : "text-white/85 hover:text-white"
-                  }`}
-                >
-                  {item.label}
-                  {item.dropdown && <ChevronIcon className="h-2.5 w-2.5" />}
-                </Link>
-                {item.dropdown && activeDropdown === item.label && (
-                  <div className="absolute left-1/2 top-full min-w-[268px] -translate-x-1/2 border border-[color:var(--line)] bg-bone p-2 shadow-[0_24px_60px_-40px_rgba(11,58,56,0.55)]">
-                    {item.dropdown.map((sub) => {
-                      const external = sub.href.startsWith("http");
-                      const cls =
-                        "block px-4 py-2.5 font-sans text-[13px] text-ink-soft transition-colors duration-300 hover:bg-teal-50 hover:text-teal-700";
-                      return external ? (
-                        <a key={sub.label} href={sub.href} target="_blank" rel="noreferrer" className={cls}>
-                          {sub.label}
-                        </a>
-                      ) : (
-                        <Link key={sub.label} href={sub.href} className={cls}>
-                          {sub.label}
-                        </Link>
-                      );
-                    })}
+              {megaOpen && (
+                <div id="treatments-menu" className="absolute left-0 top-full z-[60] w-[620px] pt-3">
+                  <div className="grid grid-cols-[1.25fr_1fr] gap-10 rounded-surface border border-line bg-paper p-8 shadow-[0_40px_80px_-40px_rgba(18,53,42,0.45)]">
+                    <MegaColumn title="Dentist" items={dentalTreatments.map((t) => ({ label: t.name, href: treatmentHref(t) }))} />
+                    <div className="flex flex-col">
+                      <MegaColumn title="Doctor" items={medicalTreatments.map((t) => ({ label: t.name, href: treatmentHref(t) }))} />
+                      <Link href="/treatments" className="link mt-auto pt-6 text-[15px]">
+                        All treatments
+                      </Link>
+                    </div>
                   </div>
-                )}
-              </div>
+                </div>
+              )}
+            </div>
+
+            {links.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`flex h-10 items-center rounded-control px-3.5 text-[15px] font-medium transition-colors ${navLink}`}
+              >
+                {link.label}
+              </Link>
             ))}
           </nav>
 
-          <div className="hidden items-center gap-3 lg:flex">
-            <Link
-              href={whatsAppHref(whatsapp)}
+          <div className="hidden items-center gap-2 lg:flex">
+            <a
+              href={telHref(siteConfig.phone)}
+              className={`flex h-11 items-center gap-2 rounded-control px-4 text-[15px] font-semibold transition-colors ${
+                clear ? "text-white hover:bg-white/10" : "text-forest-800 hover:bg-mist"
+              }`}
+            >
+              <Phone size={18} />
+              <span className="sr-only xl:not-sr-only">{siteConfig.phone}</span>
+            </a>
+            <a
+              href={whatsAppHref(siteConfig.whatsapp, defaultWhatsAppMessage)}
               target="_blank"
-              aria-label="Message Soochuh Medical on WhatsApp"
-              className={`grid h-10 w-10 place-items-center rounded-full border transition-colors duration-500 ${
-                onLight
-                  ? "border-teal-900/20 text-teal-700 hover:border-teal-500 hover:bg-teal-500 hover:text-white"
-                  : "border-white/35 text-white hover:bg-white hover:text-teal-900"
-              }`}
+              rel="noreferrer"
+              className={`${clear ? "btn-gold" : "btn-primary"} min-h-[44px] px-5 text-[15px]`}
             >
-              <WhatsAppIcon className="h-4 w-4" />
-            </Link>
-            <Link
-              href={bookHref}
-              className={`btn px-6 py-3.5 ${
-                onLight
-                  ? "bg-teal-900 text-white hover:bg-teal-500"
-                  : "bg-white text-teal-900 hover:bg-teal-500 hover:text-white"
-              }`}
-            >
-              Book a visit
-            </Link>
+              <WhatsappLogo size={18} weight="fill" />
+              WhatsApp us
+            </a>
           </div>
 
           <button
             type="button"
-            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
-            aria-expanded={mobileMenuOpen}
-            className={`-mr-2 p-2 lg:hidden ${onLight ? "text-ink" : "text-white"}`}
-            onClick={() => setMobileMenuOpen((v) => !v)}
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            className={`-mr-2 grid h-12 w-12 place-items-center rounded-control lg:hidden ${clear ? "text-white" : "text-ink"}`}
+            onClick={() => setMenuOpen((v) => !v)}
           >
-            <span className="sr-only">Menu</span>
-            <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
-              {mobileMenuOpen ? (
-                <path strokeLinecap="round" d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path strokeLinecap="round" d="M4 7h16M4 12h16M4 17h16" />
-              )}
-            </svg>
+            {menuOpen ? <X size={26} /> : <List size={26} />}
           </button>
         </div>
-      </div>
 
-      {/* Mobile drawer */}
-      {mobileMenuOpen && (
-        <div className="h-[calc(100dvh-72px)] overflow-y-auto bg-bone lg:hidden">
-          <div className="shell space-y-8 py-8">
-            {navItems.map((item) => (
-              <div key={item.label}>
-                {item.dropdown ? (
-                  <>
-                    <p className="eyebrow mb-3">{item.label}</p>
-                    <ul className="space-y-1 border-l border-[color:var(--line)] pl-4">
-                      {item.dropdown.map((sub) => (
-                        <li key={sub.label}>
-                          <Link
-                            href={sub.href}
-                            onClick={() => setMobileMenuOpen(false)}
-                            className="block py-2.5 font-display text-lg text-ink"
-                          >
-                            {sub.label}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </>
-                ) : (
-                  <Link
-                    href={item.href || "#"}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="block py-2 font-display text-2xl text-ink"
-                  >
-                    {item.label}
-                  </Link>
-                )}
-              </div>
-            ))}
-
-            <div className="space-y-3 border-t border-[color:var(--line)] pt-8">
-              <Link href={bookHref} onClick={() => setMobileMenuOpen(false)} className="btn-primary w-full">
-                Book a visit
-              </Link>
-              <div className="grid grid-cols-2 gap-3">
-                <Link href={telHref(phone)} className="btn-outline w-full">
-                  <PhoneIcon className="h-4 w-4" /> Call
-                </Link>
-                <Link href={whatsAppHref(whatsapp)} target="_blank" className="btn-outline w-full">
-                  <WhatsAppIcon className="h-4 w-4" /> WhatsApp
-                </Link>
-              </div>
-              <p className="pt-4 font-sans text-sm text-ink-muted">{siteConfig.addressText}</p>
+        {menuOpen && (
+          <div className="h-[calc(100dvh-72px)] overflow-y-auto border-t border-line bg-paper lg:hidden">
+            <div className="shell space-y-10 py-8">
+              <ul className="space-y-1">
+                {links.map((link) => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      onClick={() => setMenuOpen(false)}
+                      className="block py-2 text-[30px] font-semibold tracking-[-0.03em] text-ink"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              <MobileGroup title="Dentist" items={dentalTreatments.map((t) => ({ label: t.name, href: treatmentHref(t) }))} />
+              <MobileGroup title="Doctor" items={medicalTreatments.map((t) => ({ label: t.name, href: treatmentHref(t) }))} />
+              <p className="text-[15px] text-ink-muted">{siteConfig.addressText}</p>
             </div>
           </div>
-        </div>
-      )}
-    </header>
+        )}
+      </header>
+    </>
+  );
+}
+
+type NavItem = { label: string; href: string };
+
+function MegaColumn({ title, items }: { title: string; items: NavItem[] }) {
+  return (
+    <div>
+      <p className="text-[13px] font-semibold text-ink-muted">{title}</p>
+      <ul className="mt-3 space-y-0.5">
+        {items.map((item) => (
+          <li key={item.href}>
+            <Link
+              href={item.href}
+              className="-mx-2 block rounded-[8px] px-2 py-1.5 text-[15px] font-medium text-ink transition-colors hover:bg-mist hover:text-forest-800"
+            >
+              {item.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function MobileGroup({ title, items }: { title: string; items: NavItem[] }) {
+  return (
+    <details className="acc group border-t border-line pt-5">
+      <summary className="flex items-center justify-between">
+        <span className="text-[17px] font-semibold text-ink">{title} treatments</span>
+        <CaretDown size={18} className="text-forest-800 transition-transform group-open:rotate-180" />
+      </summary>
+      <ul className="mt-3 grid gap-x-6 sm:grid-cols-2">
+        {items.map((item) => (
+          <li key={item.href}>
+            <Link href={item.href} className="block py-2.5 text-[16px] text-ink-soft">
+              {item.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </details>
   );
 }

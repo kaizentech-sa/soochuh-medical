@@ -8,62 +8,49 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        /* Anchored on the teal in the Soochuh mark (#008080) + warm neutrals */
+        /*
+          "Forest" family: off-white paper, deep green, one gold accent.
+          Contrast: forest-800 on paper 10.1:1, ink-muted on paper 5.4:1,
+          gold-700 on paper 5.2:1. gold-500 is decorative / large-type only.
+        */
+        paper: '#FCFDFB',
+        mist: '#F1F5F1',
         ink: {
-          DEFAULT: '#14211F',
-          soft: '#3D4A48',
-          muted: '#6E7B78',
+          DEFAULT: '#13221B',
+          soft: '#3D4C45',
+          muted: '#5E6B65',
         },
-        teal: {
-          950: '#08201F',
-          900: '#0B3A38',
-          700: '#0F5C5A',
-          600: '#137270',
-          500: '#008080',
-          300: '#7FB8B4',
-          200: '#B7D6D2',
-          100: '#DCEBE8',
-          50:  '#EFF6F4',
+        forest: {
+          950: '#0D271E',
+          900: '#12352A',
+          800: '#1B4A39',
+          700: '#256049',
+          500: '#5D8C74',
+          300: '#A8C4B3',
+          200: '#CADCD0',
+          100: '#DDE8E1',
         },
-        clay: {
-          DEFAULT: '#B9805F',
-          light:   '#D6A98C',
-          soft:    '#EBD8C9',
+        gold: {
+          700: '#87672F',
+          500: '#C4A15C',
+          300: '#E2CB95',
+          100: '#F3EAD3',
         },
-        bone: {
-          DEFAULT: '#FBF8F4',
-          deep:    '#F3ECE4',
-          line:    '#E7DED3',
-        },
+        line: '#DDE5DF',
       },
       fontFamily: {
-        display: ['Fraunces', 'Georgia', 'serif'],
-        sans: ['Jost', 'Helvetica Neue', 'Arial', 'sans-serif'],
-        body: ['Jost', 'Helvetica Neue', 'Arial', 'sans-serif'],
-        heading: ['Fraunces', 'Georgia', 'serif'],
-      },
-      letterSpacing: {
-        eyebrow: '0.22em',
+        sans: ['var(--font-sans)', 'Helvetica Neue', 'Arial', 'sans-serif'],
       },
       maxWidth: {
-        shell: '1240px',
-        prose: '68ch',
+        shell: '1400px',
       },
+      /* Shape lock: controls 12px, surfaces (cards, images, panels) 20px. */
       borderRadius: {
-        arch: '999px 999px 8px 8px',
-        lozenge: '999px',
+        control: '12px',
+        surface: '20px',
       },
       transitionTimingFunction: {
-        soft: 'cubic-bezier(0.22, 1, 0.36, 1)',
-      },
-      keyframes: {
-        rise:   { '0%': { opacity: '0', transform: 'translateY(24px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
-        fade:   { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
-        marquee:{ '0%': { transform: 'translateX(0)' }, '100%': { transform: 'translateX(-50%)' } },
-      },
-      animation: {
-        rise: 'rise 0.9s cubic-bezier(0.22,1,0.36,1) forwards',
-        fade: 'fade 0.7s ease-out forwards',
+        soft: 'cubic-bezier(0.16, 1, 0.3, 1)',
       },
     },
   },

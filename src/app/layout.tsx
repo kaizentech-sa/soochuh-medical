@@ -1,6 +1,18 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+import { Instrument_Sans } from "next/font/google";
 import "./globals.css";
 import { siteConfig } from "@/data/site";
+
+/*
+  One family, used with intent: Instrument Sans carries both the bold display
+  headlines and the body. Emphasis is its own italic, never a second typeface.
+*/
+const sans = Instrument_Sans({
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  variable: "--font-sans",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -8,23 +20,28 @@ export const metadata: Metadata = {
     template: "%s | Soochuh Medical",
   },
   description:
-    "Soochuh Medical is a women-led medical and dental practice at 208A Main Road, Diep River, Cape Town. General practice, family medicine, general and aesthetic dentistry under one roof.",
+    "A doctor and dentist under one roof at 208A Main Road, Diep River, Cape Town. Gentle dentistry, family medicine, clear prices and easy booking by WhatsApp or phone.",
   keywords: [
     "dentist Diep River",
-    "dentist Cape Town",
+    "doctor Diep River",
     "GP Diep River",
-    "aesthetic dentistry Cape Town",
-    "women-led medical practice Cape Town",
+    "dentist Cape Town Southern Suburbs",
+    "nervous patient dentist Cape Town",
+    "sedation dentist Cape Town",
   ],
   metadataBase: new URL("https://soochuhmedical.co.za"),
   openGraph: {
     title: "Soochuh Medical | Doctor & Dentist in Diep River, Cape Town",
     description:
-      "A women-led medical and dental practice in Diep River, Cape Town. Unhurried care, modern dentistry, one address.",
+      "A warm, welcoming practice where a doctor and dentist work under one roof. Book on WhatsApp or by phone.",
     locale: "en_ZA",
     type: "website",
   },
   icons: { icon: "/Untitled design.svg" },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#FCFDFB",
 };
 
 const localBusinessJsonLd = {
@@ -32,13 +49,20 @@ const localBusinessJsonLd = {
   "@type": ["MedicalClinic", "Dentist"],
   name: siteConfig.name,
   telephone: siteConfig.phoneIntl,
+  email: siteConfig.email,
+  url: "https://soochuhmedical.co.za",
+  priceRange: "R450-R18,000",
   address: {
     "@type": "PostalAddress",
     streetAddress: siteConfig.address.line1,
     addressLocality: siteConfig.address.line2,
     addressRegion: siteConfig.address.region,
+    postalCode: siteConfig.address.postalCode,
     addressCountry: "ZA",
   },
+  openingHoursSpecification: siteConfig.hours
+    .filter((h) => h.opens)
+    .map((h) => ({ "@type": "OpeningHoursSpecification", dayOfWeek: h.schema, opens: h.opens, closes: h.closes })),
   sameAs: [siteConfig.instagram],
 };
 
@@ -46,18 +70,12 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en-ZA">
+    <html lang="en-ZA" className={sans.variable} suppressHydrationWarning>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        {/*
-          Jost stands in for Futura PT (the geometric sans that gives the
-          reference clinics their calm, modern voice); Fraunces adds the
-          editorial warmth the brand needs as a women-led practice.
-        */}
-        <link
-          href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..500&family=Jost:ital,wght@0,300..600;1,300..400&display=swap"
-          rel="stylesheet"
+        {/* Marks JS as available before first paint so the hero can pre-hide. */}
+        <script
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: one-line class flag
+          dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }}
         />
         <script
           type="application/ld+json"
@@ -68,7 +86,7 @@ export default function RootLayout({
       <body className="antialiased">
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[300] focus:bg-teal-900 focus:px-5 focus:py-3 focus:text-sm focus:text-white"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[300] focus:rounded-control focus:bg-forest-800 focus:px-5 focus:py-3 focus:text-sm focus:text-white"
         >
           Skip to content
         </a>
